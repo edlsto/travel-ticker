@@ -41,12 +41,12 @@ header {
 }
 
 aside {
-  background-color: #ADFFF3;
+  background-color: #CDFFF8;
   grid-area: sidebar;
 }
 
 main {
-  background-color: #D6D6D6;
+  background-color: #EEEEEE;
   grid-area: main;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -62,12 +62,10 @@ main {
 }
 
 .pending-upcoming {
-  border: 1px solid black;
   grid-area: pending-upcoming;
 }
 
 .past {
-  border: 1px solid black;
   grid-area: past;
 }
 
@@ -129,4 +127,76 @@ header h3 {
   border-radius: .2em;
   line-height: 0;
   margin-top: .8em;
+}
+
+.spent-container {
+  margin-top: 2em;
+
+}
+
+.book-icon {
+  width: 40%;
+}
+
+.book-trip {
+  background: white;
+  width: 75%;
+  margin: 1em auto 0 auto;
+  padding: 1em;
+  border: 1px solid black;
+}
+
+.book-trip h3 {
+  margin: 0
+}
+
+#spent-this-year {
+  font-size: 2.5em;
+  display: block;
+  line-height: .9
+}
+
+.trip-card {
+  background: white;
+  margin: 1em 20px 1em 18px;
+  padding: 1em;
+  display: flex;
+  text-align: left
+}
+
+
+.trip-card h3 {
+  margin: 0;
+  line-height: 1.9;
+}
+
+.card-img {
+  width: 25%;
+  height: 5em;
+  margin-right: 1em;
+  object-fit: cover;
+}
+
+.past .card-img {
+  width: 40%;
+  height: 5em;
+  margin-right: 1em;
+  object-fit: cover;
+}
+
+.upcoming-wrapper {
+  border-right: 1px solid gray;
+  padding-top: 1em;
+}
+
+.past-wrapper {
+  padding-top: 1em;
+}
+
+.past-wrapper > h3,
+.upcoming-wrapper > h3 {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.5em;
+  letter-spacing: .1rem;
 }
