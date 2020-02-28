@@ -56,6 +56,15 @@ main {
     'pending-upcoming past';
 }
 
+.dashboard-agency main {
+  background-color: #EEEEEE;
+  grid-area: main;
+  justify-content: center;
+  display: block;
+}
+
+
+
 .current {
   grid-area: current;
   text-align: center;
@@ -71,9 +80,9 @@ main {
 
 h1 {
   font-family: 'Cabin Condensed';
-  text-shadow: 1px 1px 1px black;
-  font-size: 9em;
-  margin: .2em 0;
+  text-shadow: 0px 0px 3px black;
+  font-size: 5em;
+  margin: 1.5em 0 .2em 0;
 }
 
 h2 {
@@ -189,6 +198,8 @@ header h3 {
   padding-top: 1em;
 }
 
+
+
 .past-wrapper {
   padding-top: 1em;
 }
@@ -199,4 +210,29 @@ header h3 {
   text-transform: uppercase;
   font-size: 1.5em;
   letter-spacing: .1rem;
+}
+
+.dashboard-agency .destination {
+}
+
+.dashboard-agency .date {
+}
+
+.dashboard-agency .travelers {
+}
+
+.agency-btn {
+  margin: 0 2em;
+  flex: 0 0 10%;
+}
+
+.trip-req {
+  font-size: 1.1em;
+  line-height: 1.9;
+  flex: 0 0 20%;
+}
+
+.dashboard-agency .trip-card {
+  display: flex;
+  justify-content: space-between;
 }
