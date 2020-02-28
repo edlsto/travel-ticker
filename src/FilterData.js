@@ -1,4 +1,6 @@
 import User from './User';
+var moment = require('moment');
+
 
 class FilterData {
   constructor(id) {
@@ -21,13 +23,14 @@ class FilterData {
   getAllTripsForUser(userID) {
     return Promise.all([this.allTrips, this.allDestinations])
       .then( data => {
+        const regex = /\//gi;
         const filteredData = data[0].trips.filter(trip => trip.userID === userID)
           return filteredData.map(trip => {
             return {
               id: trip.id,
               destination: data[1].destinations.find(destination => destination.id === trip.destinationID),
               travelers: trip.travelers,
-              date: new Date(trip.date).toDateString(),
+              date: moment(trip.date.replace(regex, '-')).format(),
               duration: trip.duration,
               status: trip.status
             }
