@@ -8,7 +8,7 @@ class FilterData {
       .then(data => data.json());
     this.allDestinations = fetch("https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations")
       .then(data => data.json());
-    this.user = fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id}`)
+    this.user = fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id || ''}`)
       .then(data => data.json());
   }
 
