@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import './css/base.scss';
-import User from './User';
 import FilterData from './FilterData';
 import domUpdates from './domUpdates'
 import './images/book.png'
@@ -21,7 +20,8 @@ const body = $('body')
 //   }
 // })
 
-agencyView()
+// agencyView()
+userView()
 
 function agencyView() {
   body.removeClass('log-in')
@@ -33,7 +33,6 @@ function agencyView() {
     </aside>
     <main>
       <div class="requests"><h3>New trip requests</h3>
-      <div class="trip-card"><span class="destination trip-req">Destination</span><span class="date trip-req">Date</span><span class="travelers trip-req">Travelers</span><button class="agency-btn" type="button">Approve</button><button class="agency-btn" type="button">Deny</button></div>
       </div>
     </main>
 
@@ -44,7 +43,7 @@ function agencyView() {
 }
 
 
-function clearHTML(userID) {
+function userView(userID) {
   body.removeClass('log-in')
   const randomUser = Math.floor(Math.random() * 50)
   onStartup(randomUser)
@@ -69,8 +68,15 @@ function clearHTML(userID) {
 
 function startUpAgencyView() {
   domUpdates.displayName('Agency');
-  let userData = new FilterData()
-  console.log(userData)
+  let userData = new FilterData();
+
+  userData.getAgency()
+    .then(agency => {
+      console.log(agency.users)
+      console.log(agency.getCurrentTrips(agency.getAllTrips()))
+      domUpdates.agencyDisplayPending(agency.getCurrentTrips(agency.getAllTrips()))
+    })
+
 }
 
 function onStartup(userID) {
@@ -81,6 +87,7 @@ function onStartup(userID) {
       domUpdates.displayName(user.name)
       domUpdates.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
       domUpdates.displayPendingUpcoming(user.getUpcomingTrips())
+      console.log(user.getPastTrips())
       domUpdates.displayPast(user.getPastTrips())
     })
 }
