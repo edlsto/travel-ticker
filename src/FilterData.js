@@ -4,7 +4,7 @@ import Trip from './Trip'
 var moment = require('moment');
 
 
-class FilterData {
+class DataRepo {
 
   constructor(id) {
     this.allTrips = fetch("https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips")
@@ -67,8 +67,10 @@ class FilterData {
 
 
   getAllTrips(userID, trips, destinations, users) {
+    console.log(trips)
     const regex = /\//gi;
-    const filteredData = trips.trips.filter(trip => trip.userID === userID)
+    const filteredData = trips.trips.filter(trip => trip.userID === userID || trip.userId === userID)
+    console.log(filteredData)
     return filteredData.map(trip => {
       return new Trip(trip, destinations, users)
    })
@@ -78,4 +80,4 @@ class FilterData {
 
 }
 
-export default FilterData;
+export default DataRepo;
