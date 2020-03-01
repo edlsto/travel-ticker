@@ -1,4 +1,4 @@
-import FilterData from './FilterData';
+import DataRepo from './FilterData';
 var moment = require('moment');
 import Trip from './Trip'
 
@@ -25,8 +25,8 @@ class User {
     })
   }
 
-  getCurrentTrips(trips) {
-    return trips.filter(trip => {
+  getCurrentTrips() {
+    return this.trips.filter(trip => {
       return moment(moment()).isBefore(moment(trip.date).add(trip.duration, 'days')) && moment(trip.date).isBefore(moment())
     })
   }
@@ -38,8 +38,9 @@ class User {
   }
 
   getPendingTrips() {
+    console.log(this.trips)
     return this.trips.filter(trip => {
-      return moment(trip.date).isAfter(moment()) && trip.status === 'pending'
+      return trip.status === 'pending'
     })
   }
 
