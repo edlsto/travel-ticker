@@ -23,13 +23,21 @@ let domUpdates = {
   },
 
   displayPendingUpcoming(trips) {
-    console.log(trips)
     trips.sort((a, b) => b.status - a.status ? 1 : -1)
     const pendingUpcoming = $('.pending-upcoming')
     trips.forEach(trip => {
       pendingUpcoming.prepend(`<div class="trip-card ${trip.status}"><img class="card-img" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><div class="status"><p class="status-btn">${this.uppercase(trip.status)}</p></div></div>`)
     })
 
+  },
+
+  displaySearchResults(users) {
+    const requests = $('.requests')
+    requests.html('')
+    requests.append(users.length > 0 ? '<h3>Search results</h3>' : '<h3>No search results</h3>')
+    users.forEach(user => {
+      requests.append(`<div class="trip-card"><span class="traveler-name search-result">${user.name}</span><button type="button">Client details</button></div>`)
+    })
   },
 
   uppercase(string) {
@@ -54,8 +62,13 @@ let domUpdates = {
 
 
   agencyDisplayPending(trips) {
+    console.log(trips)
     const requests = $('.requests')
+    requests.html('')
+    console.log(trips)
+    requests.append(trips.length > 0 ? '<h3>New trip requests</h3>' : '<h3>No new trip requests</h3>')
     trips.forEach(trip => {
+      console.log(trip)
       requests.append(`<div class="trip-card"><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span><button class="agency-btn" type="button">Approve</button><button class="agency-btn" type="button">Deny</button></div>`)
     })
   },
