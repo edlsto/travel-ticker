@@ -5,6 +5,8 @@ import domUpdates from './domUpdates'
 import './images/book.png'
 import './images/plus.png'
 import './images/minus.png'
+import './images/search.png'
+
 
 var moment = require('moment');
 
@@ -14,29 +16,34 @@ const logInBtn = $('.log-in')
 const body = $('body')
 
 
-// logInBtn.on('click', () => {
-//   const regex = /^traveler([1-9]|[1-4][0-9]|50)$/;
-//   if (regex.test(userName.val()) && password.val('travel2020')) {
-//     const userID = parseInt(userName.val().replace( /^\D+/g, ''))
-//     userView(userID);
-//   } else if (userName.val('agency') && password.val('travel2020')) {
-//     agencyView()
-//   }
-// })
+logInBtn.on('click', () => {
+  const regex = /^traveler([1-9]|[1-4][0-9]|50)$/;
+  if (regex.test(userName.val()) && password.val('travel2020')) {
+    const userID = parseInt(userName.val().replace( /^\D+/g, ''))
+    userView(userID);
+  } else if (userName.val('agency') && password.val('travel2020')) {
+    agencyView()
+  }
+})
 
 // agencyView()
-userView()
+// userView()
 
 function agencyView() {
   body.removeClass('log-in')
   body.html(`
-    <header><h2>Travel Tracker</h2><h3 id="user-name"></h3></header>
+    <header>
+      <h2>Travel Tracker</h2>
+        <div class="search-user-name-wrapper"><img class="search-img" src="./images/search.png"><input type="text" class="search" placeholder="Search for clients ">
+      </div>
+
+    </header>
     <aside>
       <div class="spent-container"><span class="display-cost"></span>in income generated <br> this year</div>
       <div class="spent-container"><span class="display-cost"></span>travelers on trips today</div>
     </aside>
     <main>
-      <div class="requests"><h3>New trip requests</h3>
+      <div class="requests">
       </div>
     </main>
 
@@ -69,20 +76,35 @@ function userView(userID) {
 
   `);
   body.addClass('dashboard')
-  onStartup(randomUser)
+  // onStartup(randomUser)
+  onStartup(userID)
 
 }
 
 function startUpAgencyView() {
-  domUpdates.displayName('Agency');
+  // domUpdates.displayName('Agency');
   let userData = new DataRepo();
 
   userData.getAgency()
     .then(agency => {
-      console.log(agency.users)
-      console.log(agency.getCurrentTrips(agency.getAllTrips()))
-      domUpdates.agencyDisplayPending(agency.getCurrentTrips(agency.getAllTrips()))
-      console.log(agency.getPendingTrips(agency.getAllTrips()))
+      domUpdates.agencyDisplayPending(agency.getPendingTrips(agency.getAllTrips()))
+      const search = $('.search');
+      const requests = $('.requests')
+      // search.on('click', () => {
+      //   requests.html('')
+      // })
+      search.on('keyup', () => {
+        console.log(search.val())
+        if (search.val() === '') {
+          console.log('empty')
+          domUpdates.agencyDisplayPending(agency.getPendingTrips(agency.getAllTrips()))
+        } else {
+        let searchResults = agency.users.filter(user => {
+          return search.val().toLowerCase() === user.name.slice(0, search.val().length).toLowerCase() || search.val().toLowerCase() === user.name.split(' ')[1].slice(0, search.val().length).toLowerCase()
+        })
+        domUpdates.displaySearchResults(searchResults)
+        }
+      })
     })
 
 }
