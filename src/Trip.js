@@ -2,7 +2,6 @@ var moment = require('moment');
 
 class Trip {
   constructor(tripData, destinationsData, users) {
-    console.log(users)
     this.userID = tripData.userID;
     this.id = tripData.id
     this.destination = destinationsData.destinations.find(destination => destination.id === tripData.destinationID)
@@ -15,6 +14,8 @@ class Trip {
     } else {
       this.name = users.name
     }
+    this.cost = this.destination.estimatedLodgingCostPerDay * (this.duration - 1) + this.destination.estimatedFlightCostPerPerson
+
   }
   }
 
