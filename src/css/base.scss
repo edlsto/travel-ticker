@@ -375,3 +375,52 @@ header h3 {
 .flatpickr-calendar {
   margin: 0 auto;
 }
+
+.status {
+  align-items: center;
+  display: flex;
+}
+
+.approved .status-btn {
+  background: green;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+}
+
+.pending .status-btn {
+  background: #C7C100;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+  // text-shadow: .4px .8px 1.2px rgba(0,0,0,0.8);;
+}
+
+
+.trip-details {
+  flex: 1 0 auto;
+}
+
+
+.current-trip img {
+  width: 60%;
+}
+
+.current-trip {
+  justify-content: center;
+  // width: 80%;
+}
+
+.current-label .status-btn {
+  background: #2B77FF;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+}
+
+.current-label {
+  display: flex;
+  align-items: center;
+  margin-right: 3em;
+  margin-left: 1em;
+}
