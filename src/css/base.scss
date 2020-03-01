@@ -236,6 +236,11 @@ header h3 {
   flex: 0 0 20%;
 }
 
+.search-result {
+  font-size: 1.1em;
+  line-height: 1.9;
+}
+
 .dashboard-agency .trip-card {
   display: flex;
   justify-content: space-between;
@@ -423,4 +428,18 @@ header h3 {
   align-items: center;
   margin-right: 3em;
   margin-left: 1em;
+}
+
+.search {
+  width: 15em;
+  margin: .8em 2em 0 0;
+}
+
+.search-img {
+  height: 50%;
+  margin: 1.1em .3em 0 0;
+}
+
+.search-user-name-wrapper {
+  display: flex;
 }
