@@ -1,4 +1,6 @@
 
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -54,6 +56,7 @@ main {
   grid-template-areas:
     'current current'
     'pending-upcoming past';
+  overflow-y:auto;
 }
 
 .dashboard-agency main {
@@ -153,13 +156,14 @@ header h3 {
   margin: 1em auto 0 auto;
   padding: 1em;
   border: 1px solid black;
+  cursor: pointer;
 }
 
 .book-trip h3 {
   margin: 0
 }
 
-#spent-this-year {
+.display-cost {
   font-size: 2.5em;
   display: block;
   line-height: .9
@@ -235,4 +239,188 @@ header h3 {
 .dashboard-agency .trip-card {
   display: flex;
   justify-content: space-between;
+}
+
+.book-trip-view {
+  display: block;
+  padding: 2em;
+}
+
+.destinations-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.destinations-wrapper::after {
+  content: '';
+  flex-grow: 1000000000;
+}
+
+.destination-tile {
+  flex: 1 1 11.5em;
+  height: 10em;
+  position: relative;
+  margin: 0;
+  padding: .2em;
+  cursor: pointer;
+}
+
+.destinations-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+  background-color: rgba(0,0,255,0.2);
+
+}
+
+
+
+.destination-name {
+  top: .4em;
+  color: white;
+  font-size: 1.3em;
+  text-shadow: .2px .4px 1.8px rgba(0,0,0,0.6);;
+  padding: .2em;
+  background-color: #525252;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  display: inline;
+  position: relative;
+  z-index: 1;
+}
+
+.book-trip-view h3 {
+  font-size: 2em
+}
+
+.destination-name-wrapper {
+  position: absolute;
+  top: 0
+}
+
+.select-trip-details h4 {
+  margin-top: 1em;
+  font-size: 1.5em;
+}
+
+.select-trip-details input {
+  width: 2.5em;
+  text-align: center;
+  flex: 0 0 0;
+  margin-top: 1em;
+  padding: 0;
+}
+
+.plus-minus-img {
+  width: 2.5em;
+  height: 2.5em;
+  margin: 0 auto;
+  text-align: center;
+  margin: 1em;
+}
+
+.select-trip-details input[type=number]::-webkit-inner-spin-button,
+.select-trip-details input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.number-travelers-wrapper {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 100%;
+}
+
+.submit-request {
+
+}
+
+.options-wrapper {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex: 0 0 50%;
+}
+
+.calculate-cost {
+  flex: 0 0 50%
+}
+
+.calculate-cost .display-cost {
+  margin-top: .5em;
+}
+
+.options-wrapper h4 {
+  flex: 0 0 100%
+}
+
+.lower-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.submit-request {
+  width: 15em;
+  height: 3em;
+  background: #57DE92;
+  border: 0;
+  border-radius: .5em;
+  text-transform: uppercase;
+  color: white;
+}
+
+.flatpickr-calendar {
+  margin: 0 auto;
+}
+
+.status {
+  align-items: center;
+  display: flex;
+}
+
+.approved .status-btn {
+  background: green;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+}
+
+.pending .status-btn {
+  background: #C7C100;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+  // text-shadow: .4px .8px 1.2px rgba(0,0,0,0.8);;
+}
+
+
+.trip-details {
+  flex: 1 0 auto;
+}
+
+
+.current-trip img {
+  width: 60%;
+}
+
+.current-trip {
+  justify-content: center;
+  // width: 80%;
+}
+
+.current-label .status-btn {
+  background: #2B77FF;
+  color: white;
+  border-radius: 1em;
+  padding: .3em .6em;
+}
+
+.current-label {
+  display: flex;
+  align-items: center;
+  margin-right: 3em;
+  margin-left: 1em;
 }
