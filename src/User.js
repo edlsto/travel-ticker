@@ -39,7 +39,6 @@ class User {
   }
 
   getPendingTrips() {
-    console.log(this.trips)
     return this.trips.filter(trip => {
       return trip.status === 'pending'
     })
