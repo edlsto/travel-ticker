@@ -33,7 +33,7 @@ class DataRepo {
   getUser(userID) {
     return Promise.all([this.user, this.allTrips, this.allDestinations])
       .then(promises => {
-        return new User(promises[0].id, promises[0].name, promises[0].travelerType, this.getAllTrips(promises[0].id, promises[1], promises[2], promises[0]))
+        return new User(promises[0].id, promises[0].name, this.getAllTrips(promises[0].id, promises[1], promises[2], promises[0]))
       })
   }
 
@@ -42,7 +42,7 @@ class DataRepo {
       .then(promises => {
         console.log(promises[0])
         return new Agency(promises[0].travelers.map(user => {
-          return new User(user.id, user.name, user.travelerType, this.getAllTrips(user.id, promises[1], promises[2], promises[0]))
+          return new User(user.id, user.name, this.getAllTrips(user.id, promises[1], promises[2], promises[0]))
         }))
       })
   }
@@ -67,10 +67,8 @@ class DataRepo {
 
 
   getAllTrips(userID, trips, destinations, users) {
-    console.log(trips)
     const regex = /\//gi;
-    const filteredData = trips.trips.filter(trip => trip.userID === userID || trip.userId === userID)
-    console.log(filteredData)
+    const filteredData = trips.trips.filter(trip => trip.userID === userID)
     return filteredData.map(trip => {
       return new Trip(trip, destinations, users)
    })
