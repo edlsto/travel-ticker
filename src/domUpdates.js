@@ -1,8 +1,6 @@
 import $ from 'jquery';
 var moment = require('moment');
-const flatpickr = require("flatpickr");
-
-
+// const flatpickr = require("flatpickr");
 
 let domUpdates = {
 
@@ -25,9 +23,25 @@ let domUpdates = {
   },
 
   displayPendingUpcoming(trips) {
+    console.log(trips)
+    trips.sort((a, b) => b.status - a.status ? 1 : -1)
     const pendingUpcoming = $('.pending-upcoming')
     trips.forEach(trip => {
-      pendingUpcoming.prepend(`<div class="trip-card"><img class="card-img" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div></div>`)
+      pendingUpcoming.prepend(`<div class="trip-card ${trip.status}"><img class="card-img" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><div class="status"><p class="status-btn">${this.uppercase(trip.status)}</p></div></div>`)
+    })
+
+  },
+
+  uppercase(string) {
+    let stringArray = string.split('');
+    stringArray[0] = stringArray[0].toUpperCase();
+    return stringArray.join('')
+  },
+
+  displayCurrent(trips) {
+    const current = $('.current');
+    trips.forEach(trip => {
+      current.prepend(`<div class="trip-card current-trip"><div class="current-label"><p class="status-btn">Current trip</p></div><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><img class="card-img" src=${trip.destination.image}></div>`)
     })
   },
 
@@ -90,22 +104,11 @@ let domUpdates = {
       </div>
       </div>`
     )
-    // const fp = flatpickr("#date-picker", {
-    //   mode: 'range',
-    //   inline: 'true',
-    //   showMonths: 3,
-    //   onChange: function(selectedDates, dateStr, instance) {
-    //     if (selectedDates.length === 2) {
-    //       domUpdates.showCost(selectedDestination, selectedDates, $('.num-travelers-input').val())
-    //
-    //     }
-    //   }
-    // });
-    // this.showTravelerInput(selectedDestination, fp)
   },
 
 
   getTravelersNumber(selectedDestination, fp) {
+    this.showCost(selectedDestination, fp.selectedDates, $('.num-travelers-input').val())
     const numTravelersInput = $('.num-travelers-input')
     $('.minus').on('click', () => {
       let travelers = numTravelersInput.val();
@@ -127,9 +130,10 @@ let domUpdates = {
     const beginDate = moment(selectedDates[0]);
     const endDate = moment(selectedDates[1]);
     const duration = endDate.diff(beginDate, 'days')
-    const totalCostPerTraveler = duration * destination.estimatedLodgingCostPerDay + destination.estimatedFlightCostPerPerson;
+    const totalCostPerTraveler = (duration * destination.estimatedLodgingCostPerDay + destination.estimatedFlightCostPerPerson) * 1.1;
     const totalCost = totalCostPerTraveler * travelers;
-    $('#cost-estimate').text(`$${this.numberWithCommas(totalCost)}`)
+    console.log(totalCost)
+    $('#cost-estimate').text(`$${this.numberWithCommas(Math.round(totalCost))}`)
   },
 
   getDates(selectedDestination) {
@@ -137,6 +141,7 @@ let domUpdates = {
       mode: 'range',
       inline: 'true',
       showMonths: 3,
+      defaultDate: [moment().format('YYYY-MM-DD'), moment().add(7,'days').format('YYYY-MM-DD')],
       onChange: function(selectedDates, dateStr, instance) {
         if (selectedDates.length === 2) {
           domUpdates.showCost(selectedDestination, selectedDates, $('.num-travelers-input').val())
