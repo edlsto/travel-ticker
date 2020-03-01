@@ -39,8 +39,8 @@ function agencyView() {
 
     </header>
     <aside>
-      <div class="spent-container"><span class="display-cost"></span>in income generated <br> this year</div>
-      <div class="spent-container"><span class="display-cost"></span>travelers on trips today</div>
+      <div class="spent-container"><span class="display-earned display-cost"></span>in income generated <br> this year</div>
+      <div class="spent-container"><span class="display-current-travelers display-cost"></span>travelers on trips today</div>
     </aside>
     <main>
       <div class="requests">
@@ -87,22 +87,84 @@ function startUpAgencyView() {
 
   userData.getAgency()
     .then(agency => {
-      domUpdates.agencyDisplayPending(agency.getPendingTrips(agency.getAllTrips()))
+      domUpdates.showEarned(agency.incomeGenerated(agency.getAllTrips()))
+      domUpdates.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
+      domUpdates.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
+      const approveBtn = $('.approve-btn')
+      const denyBtn = $('.deny-btn')
+      approveBtn.on('click', (event) => {
+        agency.approveTrip(parseInt($(event.target).parent()[0].id.split('-')[2]))
+        $(event.target).parent()[0].remove();
+      })
+      denyBtn.on('click', event => {
+        agency.denyTrip(parseInt($(event.target).parent()[0].id.split('-')[2]))
+        $(event.target).parent()[0].remove();
+      })
       const search = $('.search');
       const requests = $('.requests')
       // search.on('click', () => {
       //   requests.html('')
       // })
       search.on('keyup', () => {
-        console.log(search.val())
         if (search.val() === '') {
-          console.log('empty')
-          domUpdates.agencyDisplayPending(agency.getPendingTrips(agency.getAllTrips()))
+          domUpdates.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
         } else {
         let searchResults = agency.users.filter(user => {
           return search.val().toLowerCase() === user.name.slice(0, search.val().length).toLowerCase() || search.val().toLowerCase() === user.name.split(' ')[1].slice(0, search.val().length).toLowerCase()
         })
         domUpdates.displaySearchResults(searchResults)
+        const searchResultsCards = $('.search-results-card')
+        searchResultsCards.on('click', event => {
+          console.log(parseInt($(event.target).parent()[0].id.split('-')[2]))
+          console.log(agency.users)
+          agency.accessUserInfo(agency.users.find(user => user.id === parseInt($(event.target).parent()[0].id.split('-')[2])))
+          const requests = $('.requests')
+          requests.addClass('user-profile')
+          requests.removeClass('requests')
+          requests.html(`
+              <div class="user-profile-wrapper">
+              <h2>${agency.name}</h2>
+
+              </div>
+            `);
+          const wrapper = $('.user-profile-wrapper');
+          const pendingUpcomingTrips = agency.getUpcomingTrips().concat(agency.getPendingTrips())
+          pendingUpcomingTrips.sort((a, b) => {
+            console.log(a.date)
+            return moment(a.date) - moment(b.date)
+          })
+          console.log(pendingUpcomingTrips)
+          pendingUpcomingTrips.forEach(trip => {
+            wrapper.append(`
+              <div class="trip-card" id="trip-request-${trip.id}">
+                <div class="trip-options">
+                  <div class="destination trip-req"><p>${trip.destination.destination}</p></div>
+                  <div class="date trip-req"><p>${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p></div>
+                  <div class="travelers trip-req"><p>${trip.travelers} travelers</p></div>
+                  <div class="status ${trip.status}"><p class="status-btn">${domUpdates.uppercase(trip.status)}</p></div>
+                </div>
+                <div class="agent-options">
+                  ${trip.status === 'pending' ? '<button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn delete-btn deny-btn" type="button">Deny</button>' : '<button class="agency-btn delete-btn" type="button">Delete</button>'}
+                </div>
+              </div>`)
+          })
+          const deleteBtn = $('.delete-btn')
+          const approveBtn = $('.approve-btn')
+          console.log(deleteBtn)
+          deleteBtn.on('click', event => {
+            agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+            $(event.target).parent().parent()[0].remove();
+          })
+          approveBtn.on('click', event => {
+            agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+            $(event.target).parent().parent()[0].remove();
+          })
+          console.log(requests)
+          console.log(agency)
+          console.log(agency.getUpcomingTrips())
+          console.log(agency.getPendingTrips())
+          console.log(agency.getCostOfTripsThisYear())
+        })
         }
       })
     })
@@ -110,14 +172,12 @@ function startUpAgencyView() {
 }
 
 function onStartup(userID) {
-  console.log(userID)
   const bookTrip = $('.book-trip')
   let userData = new DataRepo(userID)
   userData.getUser(userID)
     .then(user => {
       domUpdates.displayName(user.name)
       domUpdates.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
-      console.log(user.getPendingTrips())
       domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
       domUpdates.displayPast(user.getPastTrips())
       domUpdates.displayCurrent(user.getCurrentTrips())
