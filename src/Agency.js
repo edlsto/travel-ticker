@@ -3,7 +3,7 @@ var moment = require('moment');
 
 class Agency extends User {
   constructor(users) {
-    super (users)
+    super (undefined, undefined, undefined, users)
     this.users = users
   }
 
