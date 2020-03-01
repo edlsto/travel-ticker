@@ -3,7 +3,7 @@ var moment = require('moment');
 import Trip from './Trip'
 
 class User {
-  constructor(id, name, type, trips) {
+  constructor(id, name, trips) {
     this.id = id;
     this.name = name;
     this.trips = trips
@@ -25,8 +25,9 @@ class User {
     })
   }
 
-  getCurrentTrips() {
-    return this.trips.filter(trip => {
+  getCurrentTrips(trips) {
+    trips = this.trips || trips;
+    return trips.filter(trip => {
       return moment(moment()).isBefore(moment(trip.date).add(trip.duration, 'days')) && moment(trip.date).isBefore(moment())
     })
   }
@@ -53,11 +54,11 @@ class User {
       },
       body: JSON.stringify({
         "id": tripID,
-        "userId": this.id,
-        "destinationId": destinationID,
+        "userID": this.id,
+        "destinationID": destinationID,
         "travelers": travelers,
         "date": date,
-        "duration": 8,
+        "duration": duration,
         "status": "pending",
         "suggestedActivities": []
       })
