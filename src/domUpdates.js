@@ -141,6 +141,7 @@ let domUpdates = {
       mode: 'range',
       inline: 'true',
       showMonths: 3,
+      minDate: 'today',
       defaultDate: [moment().format('YYYY-MM-DD'), moment().add(7,'days').format('YYYY-MM-DD')],
       onChange: function(selectedDates, dateStr, instance) {
         if (selectedDates.length === 2) {
