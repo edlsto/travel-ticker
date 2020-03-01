@@ -4,7 +4,7 @@ class Trip {
   constructor(tripData, destinationsData, users) {
     this.userID = tripData.userID;
     this.id = tripData.id
-    this.destination = destinationsData.destinations.find(destination => destination.id === tripData.destinationID)
+    this.destination = destinationsData.destinations.find(destination => destination.id === tripData.destinationID || destination.id === tripData.destinationId)
     this.travelers = tripData.travelers;
     this.date = moment(tripData.date.replace(/\//gi, '-')).format();
     this.duration = tripData.duration;
