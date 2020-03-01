@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import './css/base.scss';
-import FilterData from './FilterData';
+import DataRepo from './FilterData';
 import domUpdates from './domUpdates'
 import './images/book.png'
 import './images/plus.png'
@@ -49,7 +49,9 @@ function agencyView() {
 
 function userView(userID) {
   body.removeClass('log-in')
-  const randomUser = Math.floor(Math.random() * 50)
+  const randomUser = Math.ceil(Math.random() * 50)
+  // const randomUser = 8
+
   body.html(`
     <header><h2>Travel Tracker</h2><h3 id="user-name"></h3></header>
     <aside>
@@ -73,7 +75,7 @@ function userView(userID) {
 
 function startUpAgencyView() {
   domUpdates.displayName('Agency');
-  let userData = new FilterData();
+  let userData = new DataRepo();
 
   userData.getAgency()
     .then(agency => {
@@ -86,45 +88,41 @@ function startUpAgencyView() {
 }
 
 function onStartup(userID) {
+  console.log(userID)
   const bookTrip = $('.book-trip')
-  let userData = new FilterData(userID)
+  let userData = new DataRepo(userID)
   userData.getUser(userID)
     .then(user => {
       domUpdates.displayName(user.name)
       domUpdates.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
-      domUpdates.displayPendingUpcoming(user.getUpcomingTrips())
+      console.log(user.getPendingTrips())
+      domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
       domUpdates.displayPast(user.getPastTrips())
+      domUpdates.displayCurrent(user.getCurrentTrips())
 
       bookTrip.on('click', () => {
-        // let selectedDestination, fp, numTravelers;
         userData.getDestinationsAndTrips()
           .then(data => {
-            bookTrips(data)
+            bookTrips(data, user)
           })
-
       })
-
-
-
     })
 }
 
-function bookTrips(data) {
-  let results
+function bookTrips(data, user) {
+  const parentContainer = $('main')
+  let results;
   domUpdates.bookTrip(data.allDestinations)
   const tiles = $('.destination-tile');
   tiles.on('click', (event) => {
     results = getDetailsFromDOM(event, data)
   })
-  const parentContainer = $('main')
   parentContainer.on('click', (event) => {
     if ($(event.target).hasClass('submit-request')) {
-    let numTravelers = parseInt($('.num-travelers-input').val())
-    const beginDate = moment(results[1].selectedDates[0]);
-    const endDate = moment(results[1].selectedDates[1]);
-    const duration = endDate.diff(beginDate, 'days')
-    // user.requestTrip(Date.now(), selectedDestination.id, numTravelers, beginDate.format('YYYY/MM/DD'), duration)
-    console.log(Date.now(), results[0].id, numTravelers, beginDate.format('YYYY/MM/DD'), duration)
+      let numTravelers = parseInt($('.num-travelers-input').val())
+      let duration = calculateDuration(results[1].selectedDates[0], results[1].selectedDates[1])
+      user.requestTrip(Date.now(), results[0].id, numTravelers, moment(results[1].selectedDates[0]).format('YYYY/MM/DD'), duration)
+      console.log(Date.now(), results[0].id, numTravelers, moment(results[1].selectedDates[0]).format('YYYY/MM/DD'), duration)
     }
 })
 }
@@ -133,6 +131,13 @@ function getDetailsFromDOM(event, data) {
   let selectedDestination = domUpdates.selectDestination(event, data.allDestinations)
   domUpdates.selectTripDetails(selectedDestination);
   let fp = domUpdates.getDates(selectedDestination)
-  let numTravelers = domUpdates.getTravelersNumber(selectedDestination, fp)
-  return [selectedDestination, fp, numTravelers]
+  domUpdates.getTravelersNumber(selectedDestination, fp)
+  return [selectedDestination, fp]
+}
+
+function calculateDuration(begin, end) {
+  const beginDate = moment(begin);
+  const endDate = moment(end);
+  const duration = endDate.diff(beginDate, 'days')
+  return duration
 }
