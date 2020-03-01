@@ -9,6 +9,11 @@ let domUpdates = {
     userName.text(name)
   },
 
+  displayCurrentTravelers(num) {
+    const displayCurrentTravelers = $('.display-current-travelers')
+    displayCurrentTravelers.text(num)
+  },
+
   displaySpentThisYear(amount) {
     const spentThisYear = $('#spent-this-year');
     spentThisYear.text(`$${this.numberWithCommas(amount)}`)
@@ -36,7 +41,7 @@ let domUpdates = {
     requests.html('')
     requests.append(users.length > 0 ? '<h3>Search results</h3>' : '<h3>No search results</h3>')
     users.forEach(user => {
-      requests.append(`<div class="trip-card"><span class="traveler-name search-result">${user.name}</span><button type="button">Client details</button></div>`)
+      requests.append(`<div class="trip-card search-results-card" id="user-id-${user.id}"><span class="traveler-name search-result">${user.name}</span><button type="button" class="client-details-btn agency-btn">See client details</button></div>`)
     })
   },
 
@@ -62,15 +67,13 @@ let domUpdates = {
 
 
   agencyDisplayPending(trips) {
-    console.log(trips)
     const requests = $('.requests')
     requests.html('')
-    console.log(trips)
     requests.append(trips.length > 0 ? '<h3>New trip requests</h3>' : '<h3>No new trip requests</h3>')
     trips.forEach(trip => {
-      console.log(trip)
-      requests.append(`<div class="trip-card"><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span><button class="agency-btn" type="button">Approve</button><button class="agency-btn" type="button">Deny</button></div>`)
+      requests.append(`<div class="trip-card" id="trip-request-${trip.id}""><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span><button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn deny-btn" type="button">Deny</button></div>`)
     })
+
   },
 
 
@@ -137,6 +140,11 @@ let domUpdates = {
       this.showCost(selectedDestination, fp.selectedDates, $('.num-travelers-input').val())
     })
     return parseInt($('.num-travelers-input').val())
+  },
+
+  showEarned(amount) {
+    const displayEarned = $('.display-earned');
+    displayEarned.text(`$${this.numberWithCommas(amount.toFixed(2))}`)
   },
 
   showCost(destination, selectedDates, travelers) {
