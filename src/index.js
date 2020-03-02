@@ -25,7 +25,7 @@ logInBtn.on('click', () => {
 })
 
 // agencyView()
-// userView()
+userView(randomUser)
 
 // userView(23)
 
