@@ -1,4 +1,4 @@
-import DataRepo from './FilterData';
+// import DataRepo from './DataRepo';
 var moment = require('moment');
 import Trip from './Trip'
 
@@ -11,7 +11,7 @@ class User {
 
   getCostOfTripsThisYear() {
     const tripsThisYear = this.trips.filter(trip => {
-      return moment(trip.date).isAfter('2020-01-01')
+      return moment(trip.date).isSame('2020-12-31', 'year') && trip.status !== 'pending'
     })
     return tripsThisYear.reduce((totalCost, trip) => {
       totalCost += ((trip.destination.estimatedLodgingCostPerDay + trip.destination.estimatedFlightCostPerPerson) * trip.duration) * 1.1
