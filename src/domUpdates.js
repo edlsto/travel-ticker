@@ -4,11 +4,20 @@ var moment = require('moment');
 
 let domUpdates = {
 
+  returnHomeUser(user) {
+    const main = $('main')
+    main.removeClass('book-trip-view')
+    domUpdates.addUserDashboardHTML()
+    domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
+    domUpdates.displayPast(user.getPastTrips())
+    domUpdates.displayCurrent(user.getCurrentTrips())
+  },
+
   addUserHTML() {
     const body = $('body')
     body.removeClass('log-in')
     body.html(`
-      <header><h2>Travel Tracker</h2><h3 id="user-name"></h3></header>
+      <header><h2 class="main-logo">Travel Tracker</h2><h3 id="user-name"></h3></header>
       <aside>
         <div class="spent-container"><span id="spent-this-year" class="display-cost"></span>spent on trips this year</div>
         <div class="book-trip">
@@ -17,12 +26,20 @@ let domUpdates = {
         </div>
       </aside>
       <main>
-        <div class="current"></div>
-        <div class="upcoming-wrapper"><h3>Upcoming trips</h3><div class="pending-upcoming"></div></div>
-        <div class="past-wrapper"><h3>Past trips</h3><div class="past"></div></div>
+
       </main>
     `);
     body.addClass('dashboard')
+  },
+
+  addUserDashboardHTML() {
+    const main = $('main')
+    main.html(`
+        <div class="current"></div>
+        <div class="upcoming-wrapper"><h3>Upcoming trips</h3><div class="pending-upcoming"></div></div>
+        <div class="past-wrapper"><h3>Past trips</h3><div class="past"></div></div>
+      `)
+
   },
 
   setUpUserProfile(agency) {
@@ -37,21 +54,15 @@ let domUpdates = {
       `);
   },
 
-  approveDeleteUserProfile(agency) {
-    const deleteBtn = $('.delete-btn')
-    const approveBtn = $('.approve-btn')
-    deleteBtn.on('click', event => {
-      agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
-      $(event.target).parent().parent()[0].remove();
-    })
-    approveBtn.on('click', event => {
-      agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
-      $(event.target).parent().parent()[0].remove();
-    })
-  },
+  // approveDeleteUserProfile(agency, pendingUpcomingTrips) {
+  //
+  // },
 
   showUserProfileTrips(trips) {
     const wrapper = $('.user-profile-wrapper');
+    console.log('here')
+    console.log(trips)
+    wrapper.html('')
     trips.forEach(trip => {
       wrapper.append(`
         <div class="trip-card" id="trip-request-${trip.id}">
@@ -86,7 +97,7 @@ let domUpdates = {
     body.removeClass('log-in')
     body.html(`
       <header>
-        <h2>Travel Tracker</h2>
+        <h2 class="main-logo">Travel Tracker</h2>
           <div class="search-user-name-wrapper"><img class="search-img" src="./images/search.png"><input type="text" class="search" placeholder="Search for clients ">
         </div>
 

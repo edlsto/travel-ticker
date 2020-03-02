@@ -37,7 +37,7 @@ class Agency extends User {
 
   approveTrip(id) {
     console.log('post' + id)
-    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip', {
+    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

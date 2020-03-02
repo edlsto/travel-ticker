@@ -93,7 +93,8 @@ h2 {
   color: white;
   margin: 0;
   font-size: 3em;
-  margin: .1em 0 0 .3em
+  margin: .1em 0 0 .3em;
+  cursor: pointer;
 }
 
 h3 {
@@ -156,8 +157,9 @@ header h3 {
   width: 75%;
   margin: 1em auto 0 auto;
   padding: 1em;
-  border: 1px solid black;
+  // border: .5px solid black;
   cursor: pointer;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
 }
 
 .book-trip h3 {
@@ -175,7 +177,9 @@ header h3 {
   margin: 1em 20px 1em 18px;
   padding: 1em;
   display: flex;
-  text-align: left
+  text-align: left;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+
 }
 
 
@@ -234,6 +238,8 @@ header h3 {
   border: 0;
   box-shadow: none;
   cursor: pointer;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+
 }
 
 .approve-btn {
@@ -508,4 +514,12 @@ header h3 {
 
 .user-profile .agency-btn {
   margin-left: .6em;
+}
+
+.alert {
+  background: green;
+  padding: .5em;
+  font-size: 1.5em;
+  color: white;
+  margin: .5em;
 }
