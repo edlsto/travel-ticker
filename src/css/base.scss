@@ -36,7 +36,7 @@ body, html {
 }
 
 header {
-  background-color: white;
+  background-color: #1CA3BA;
   grid-area: header;
   display: flex;
   justify-content: space-between;;
@@ -90,7 +90,7 @@ h1 {
 
 h2 {
   font-family: 'Cabin Condensed';
-  color: #3C3C3C;
+  color: white;
   margin: 0;
   font-size: 3em;
   margin: .1em 0 0 .3em
@@ -134,11 +134,12 @@ button {
 }
 
 header h3 {
-  border: 1px solid gray;
+  border: 1px solid white ;
   padding: 1em;
   border-radius: .2em;
   line-height: 0;
   margin-top: .8em;
+  color: white;
 }
 
 .spent-container {
@@ -473,7 +474,8 @@ header h3 {
 
 .user-profile h2 {
   text-align: left;
-  font-size: 2em
+  font-size: 2em;
+  color: #3C3C3C;
 }
 
 .trip-options {
