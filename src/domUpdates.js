@@ -1,8 +1,14 @@
 import $ from 'jquery';
 var moment = require('moment');
-// const flatpickr = require("flatpickr");
+const flatpickr = require("flatpickr");
 
 let domUpdates = {
+
+  showAlert() {
+    const current = $('.current')
+    current.addClass('alert')
+    current.text('Trip successfully requested! We will review your trip request.')
+  },
 
   returnHomeUser(user) {
     const main = $('main')
@@ -209,7 +215,7 @@ let domUpdates = {
   selectDestination(event, destinations) {
     const main = $('main')
     main.addClass('select-trip-details')
-    let selectedDestination = destinations.find(destination => destination.id === parseInt($(event.target).parent()[0].id));
+    let selectedDestination = destinations.find(destination => destination.id === parseInt($(event.target).closest('.destination-tile')[0].id));
     return selectedDestination
   },
 
