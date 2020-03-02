@@ -36,7 +36,7 @@ body, html {
 }
 
 header {
-  background-color: white;
+  background-color: #1CA3BA;
   grid-area: header;
   display: flex;
   justify-content: space-between;;
@@ -90,7 +90,7 @@ h1 {
 
 h2 {
   font-family: 'Cabin Condensed';
-  color: #3C3C3C;
+  color: white;
   margin: 0;
   font-size: 3em;
   margin: .1em 0 0 .3em
@@ -134,11 +134,12 @@ button {
 }
 
 header h3 {
-  border: 1px solid gray;
+  border: 1px solid white ;
   padding: 1em;
   border-radius: .2em;
   line-height: 0;
   margin-top: .8em;
+  color: white;
 }
 
 .spent-container {
@@ -228,6 +229,29 @@ header h3 {
 .agency-btn {
   margin: 0 0em;
   flex: 0 0 5%;
+  color: white;
+  text-transform: uppercase;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background: green;
+}
+
+.deny-btn {
+  background: red;
+}
+
+.delete-btn {
+  background: red;
+}
+
+.client-details-btn {
+  background: blue;
+  flex: 0 auto;
+  width: auto;
 }
 
 .trip-req {
@@ -442,4 +466,46 @@ header h3 {
 
 .search-user-name-wrapper {
   display: flex;
+}
+
+.user-profile-wrapper {
+  margin: 3em
+}
+
+.user-profile h2 {
+  text-align: left;
+  font-size: 2em;
+  color: #3C3C3C;
+}
+
+.trip-options {
+  display: flex;
+  flex: 0 0 80%;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.user-profile .trip-card {
+  justify-content: space-between;
+}
+
+.trip-options .trip-req,
+.trip-options .status {
+  flex: 0 0 20%;
+}
+
+.trip-options .trip-req:first-of-type {
+  flex: 0 0 35%;
+}
+
+.agent-options {
+  display: flex;
+  justify-content: flex-end;
+  width: 3em;
+  // flex: 0 0 26%;
+  // justify-content: center;
+}
+
+.user-profile .agency-btn {
+  margin-left: .6em;
 }
