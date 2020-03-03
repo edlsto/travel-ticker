@@ -1,8 +1,175 @@
 import $ from 'jquery';
 var moment = require('moment');
 const flatpickr = require("flatpickr");
+import DataRepo from './DataRepo';
 
 let domUpdates = {
+
+  agencyView() {
+    this.addAgencyHTML()
+    let userData = new DataRepo();
+    userData.getAgency()
+      .then(agency => {
+        this.clickLogoReturnHomeAgency(agency)
+        this.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
+        this.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
+        this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
+        this.approveOrDeny(agency)
+        this.searchForUser(agency)
+      })
+      .catch(error => console.log(error.message))
+  },
+
+  userView(userID) {
+    this.addUserHTML()
+    this.addUserDashboardHTML()
+    let userData = new DataRepo(userID)
+    userData.getUser(userID)
+      .then(user => {
+        this.clickLogoReturnHomeUser(user)
+        this.displayName(user.name)
+        this.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
+        this.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
+        this.displayPast(user.getPastTrips())
+        this.displayCurrent(user.getCurrentTrips())
+        const bookTrip = $('.book-trip')
+        bookTrip.on('click', () => {
+          userData.getDestinations()
+            .then(data => {
+              this.launchBookTripsView(data, user)
+            })
+        })
+      })
+      .catch(error => console.log(error.message))
+  },
+
+  calculateDuration(begin, end) {
+    const beginDate = moment(begin);
+    const endDate = moment(end);
+    const duration = endDate.diff(beginDate, 'days')
+    return duration
+  },
+
+  getDetailsFromDOM(event, data) {
+    let selectedDestination = this.selectDestination(event, data.allDestinations)
+    this.selectTripDetails(selectedDestination);
+    let fp = this.getDates(selectedDestination)
+    this.getTravelersNumber(selectedDestination, fp)
+    return [selectedDestination, fp]
+  },
+
+  launchBookTripsView(data, user) {
+    const parentContainer = $('main')
+    let results;
+    this.bookTrip(data.allDestinations)
+    const tiles = $('.destination-tile');
+    tiles.on('click', (event) => {
+      results = this.getDetailsFromDOM(event, data)
+    })
+    parentContainer.on('click', (event) => {
+      if ($(event.target).hasClass('submit-request')) {
+        let numTravelers = parseInt($('.num-travelers-input').val())
+        let duration = this.calculateDuration(results[1].selectedDates[0], results[1].selectedDates[1])
+        user.requestTrip(Date.now(), results[0].id, numTravelers, moment(results[1].selectedDates[0]).format('YYYY/MM/DD'), duration)
+          .then(
+            response => {
+              this.userView(user.id)
+              this.showAlert()
+            }
+          )
+      }
+  })
+},
+
+  validateForm() {
+      const userName = $('.user-name')
+      const password = $('.password')
+      const regex = /^traveler([1-9]|[1-4][0-9]|50)$/;
+      if (regex.test(userName.val()) && password.val() === 'travel2020') {
+        const userID = parseInt(userName.val().replace( /^\D+/g, ''))
+        return userID;
+      } else if (userName.val() ==='agency' && password.val() === 'travel2020') {
+        return 0;
+      } else {
+        $('.login-alert').html('<i class="fa fa-exclamation-triangle"></i> Incorrect user name and/or password')
+      }
+    },
+
+  clickLogoReturnHomeAgency(agency) {
+    const mainLogo = $('.main-logo');
+    mainLogo.on('click', () => {
+      this.returnHomeAgency(agency);
+      this.searchForUser(agency);
+    })
+  },
+
+  loadUserProfile(user, agency) {
+    agency.accessUserInfo(user)
+    this.setUpUserProfile(agency)
+    const pendingUpcomingTrips = agency.getUpcomingTrips().concat(agency.getPendingTrips()).sort((a, b) => {
+      return moment(a.date) - moment(b.date)
+    })
+    this.showUserProfileTrips(pendingUpcomingTrips)
+    this.listenForApproveTrip(agency)
+    this.listenForDenyTrip(agency)
+  },
+
+  showSearchResults(agency) {
+    let searchResults = this.searchByName(agency)
+    this.displaySearchResults(searchResults)
+    const searchResultsCards = $('.search-results-card')
+    searchResultsCards.on('click', event => {
+      let user = agency.users.find(user => user.id === parseInt($(event.target).parent()[0].id.split('-')[2]))
+      this.loadUserProfile(user, agency);
+      $('.close-btn').on('click', () => {
+        agency.resetUserAccess();
+        this.returnHomeAgency(agency);
+        this.searchForUser(agency);
+      })
+    })
+  },
+
+  searchForUser(agency) {
+    const search = $('.search');
+    const requests = $('.requests')
+    search.on('keyup', () => {
+      if (search.val() === '') {
+        this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
+      } else {
+        this.showSearchResults(agency)
+      }
+    })
+  },
+
+
+  listenForDenyTrip(agency) {
+    const deleteBtn = $('.delete-btn')
+    deleteBtn.on('click', event => {
+      agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      $(event.target).parent().parent()[0].remove();
+    })
+  },
+
+  listenForApproveTrip(agency) {
+    const approveBtn = $('.approve-btn')
+    approveBtn.on('click', event => {
+      agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      .then(
+        res => {
+          let userData = new DataRepo();
+          userData.getAgency()
+            .then(newAgency => {
+              let newUserData = newAgency.users.find(user => {
+                return user.id === agency.id
+              })
+              this.loadUserProfile(newUserData, newAgency)
+            })
+            .catch(error => console.log(error.message))
+        }
+      )
+
+    })
+  },
 
   showAlert() {
     const current = $('.current')
@@ -10,13 +177,31 @@ let domUpdates = {
     current.text('Trip successfully requested! We will review your trip request.')
   },
 
+  clickLogoReturnHomeUser(user) {
+    const mainLogo = $('.main-logo');
+    mainLogo.on('click', () => {
+      this.returnHomeUser(user);
+    })
+  },
+
+
+
   returnHomeUser(user) {
     const main = $('main')
     main.removeClass('book-trip-view')
-    domUpdates.addUserDashboardHTML()
-    domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
-    domUpdates.displayPast(user.getPastTrips())
-    domUpdates.displayCurrent(user.getCurrentTrips())
+    this.addUserDashboardHTML()
+    this.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
+    this.displayPast(user.getPastTrips())
+    this.displayCurrent(user.getCurrentTrips())
+  },
+
+  returnHomeAgency(agency) {
+    // const main = $('main')
+    this.addAgencyHTML()
+    this.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
+    this.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
+    this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
+    this.approveOrDeny(agency);
   },
 
   addUserHTML() {
@@ -53,11 +238,14 @@ let domUpdates = {
     requests.addClass('user-profile')
     requests.removeClass('requests')
     requests.html(`
+      <div class="close-btn-container"><img class="close-btn" src="images/close.png"></div>
+      <div class="user-profile-name-amount-spent"><h2>${agency.name}</h2><h3>Amount spent this year: $${this.numberWithCommas(agency.getCostOfTripsThisYear())}</h3></div>
         <div class="user-profile-wrapper">
-        <h2>${agency.name}</h2>
+
 
         </div>
       `);
+
   },
 
   // approveDeleteUserProfile(agency, pendingUpcomingTrips) {
@@ -76,7 +264,7 @@ let domUpdates = {
             <div class="destination trip-req"><p>${trip.destination.destination}</p></div>
             <div class="date trip-req"><p>${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p></div>
             <div class="travelers trip-req"><p>${trip.travelers} travelers</p></div>
-            <div class="status ${trip.status}"><p class="status-btn">${domUpdates.uppercase(trip.status)}</p></div>
+            <div class="status ${trip.status}"><p class="status-btn">${this.uppercase(trip.status)}</p></div>
           </div>
           <div class="agent-options">
             ${trip.status === 'pending' ? '<button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn delete-btn deny-btn" type="button">Deny</button>' : '<button class="agency-btn delete-btn" type="button">Delete</button>'}
@@ -186,7 +374,7 @@ let domUpdates = {
   agencyDisplayPending(trips) {
     const requests = $('.requests')
     requests.html('')
-    requests.append(trips.length > 0 ? '<h3>New trip requests</h3>' : '<h3>No new trip requests</h3>')
+    requests.append(trips.length > 0 ? '<h3>Pending trip requests</h3>' : '<h3>No new trip requests</h3>')
     trips.forEach(trip => {
       requests.append(`<div class="trip-card" id="trip-request-${trip.id}""><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span><button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn deny-btn" type="button">Deny</button></div>`)
     })
@@ -207,7 +395,7 @@ let domUpdates = {
     main.html('');
     main.addClass('book-trip-view')
     main.append('<div><h3>Where do you want to go?</h3></div><div class="destinations-wrapper"></div>')
-    domUpdates.createTiles(destinations);
+    this.createTiles(destinations);
 
 
   },
@@ -288,6 +476,13 @@ let domUpdates = {
       }
     });
     return fp;
+  },
+
+  searchByName(agency) {
+    const search = $('.search');
+    return agency.users.filter(user => {
+      return search.val().toLowerCase() === user.name.slice(0, search.val().length).toLowerCase() || search.val().toLowerCase() === user.name.split(' ')[1].slice(0, search.val().length).toLowerCase()
+    })
   }
 
 
