@@ -1,4 +1,6 @@
-let trips = [
+let trips = {
+  trips: 
+  [
   {
   id: 1,
   userID: 1,
@@ -50,6 +52,6 @@ let trips = [
   suggestedActivities: [ ]
   }
 
-]
+]}
 
 module.exports = trips;
