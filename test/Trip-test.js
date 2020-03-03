@@ -8,7 +8,7 @@ import travelers from './user-data-sample'
 import destinations from './destinations-data-sample'
 
 describe('Trip tests', function() {
-  let trip = new Trip(trips[0], destinations, travelers)
+  let trip = new Trip(trips.trips[0], destinations, travelers)
   it('should have default properties', function() {
     expect(trip.userID).to.equal(1);
     expect(trip.id).to.equal(1);
