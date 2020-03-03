@@ -1,6 +1,6 @@
 // import DataRepo from './DataRepo';
 var moment = require('moment');
-import Trip from './Trip'
+// import Trip from './Trip'
 
 class User {
   constructor(id, name, trips) {
