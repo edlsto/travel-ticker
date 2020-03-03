@@ -14,13 +14,11 @@ class DataRepo {
       .then(data => data.json());
   }
 
-  getDestinationsAndTrips() {
-    return Promise.all([this.allTrips, this.allDestinations])
+  getDestinations() {
+    return Promise.all([this.allDestinations])
       .then(promises => {
         return {
-          newTripID: this.getNewTripId(promises[0].trips),
-          allDestinations: promises[1].destinations
-        }
+          allDestinations: promises[0].destinations,        }
       })
   }
 
