@@ -134,7 +134,6 @@ describe('User tests', function() {
 
   it('should be able to get pending trips', function() {
     let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.map(trip => new Trip(trip, destinations, travelers)))
-    console.log(user.getPendingTrips())
     expect(user.getPendingTrips()).to.deep.equal(
       [
          {
