@@ -65,7 +65,7 @@ function userView(userID) {
       domUpdates.displayPast(user.getPastTrips())
       domUpdates.displayCurrent(user.getCurrentTrips())
       bookTrip.on('click', () => {
-        userData.getDestinationsAndTrips()
+        userData.getDestinations()
           .then(data => {
             bookTrips(data, user)
           })
@@ -135,6 +135,7 @@ function loadUserProfile(user, agency) {
 function bookTrips(data, user) {
   const parentContainer = $('main')
   let results;
+  console.log(data)
   domUpdates.bookTrip(data.allDestinations)
   const tiles = $('.destination-tile');
   tiles.on('click', (event) => {
