@@ -12,7 +12,7 @@ import Trip from '../src/Trip'
 
 describe('User tests', function() {
   it('should hold ID, name and trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips)
+    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips)
     expect(user.id).to.equal(1);
     expect(user.name).to.equal('Ham Leadbeater');
     expect(user.trips).to.deep.equal(
@@ -73,13 +73,13 @@ describe('User tests', function() {
   });
 
   it('should calculate cost of trips this year', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.map(trip => new Trip(trip, destinations, travelers)))
+    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getCostOfTripsThisYear()
     expect(user.getCostOfTripsThisYear()).to.equal(18106);
   });
 
   it('should be able to get future trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.map(trip => new Trip(trip, destinations, travelers)))
+    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getUpcomingTrips()
     expect(user.getUpcomingTrips()).to.deep.equal(
       [
@@ -106,7 +106,7 @@ describe('User tests', function() {
   });
 
   it('should be able to get past trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.map(trip => new Trip(trip, destinations, travelers)))
+    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getPastTrips()
     expect(user.getPastTrips()).to.deep.equal(
       [
@@ -133,7 +133,7 @@ describe('User tests', function() {
   });
 
   it('should be able to get pending trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.map(trip => new Trip(trip, destinations, travelers)))
+    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     expect(user.getPendingTrips()).to.deep.equal(
       [
          {
