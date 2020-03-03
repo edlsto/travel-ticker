@@ -471,16 +471,31 @@ header h3 {
 
 .search-user-name-wrapper {
   display: flex;
+  justify-content: flex-end;
 }
 
 .user-profile-wrapper {
-  margin: 3em
+  margin-top: 1em
+}
+
+.user-profile-name-amount-spent {
+  display: flex;
+  justify-content: space-between
+}
+
+.user-profile {
+  margin: 3em;
 }
 
 .user-profile h2 {
   text-align: left;
   font-size: 2em;
   color: #3C3C3C;
+  font-family: 'Hind Madurai';
+}
+
+.user-profile h3 {
+  line-height: 1;
 }
 
 .trip-options {
@@ -521,4 +536,19 @@ header h3 {
   font-size: 1.5em;
   color: white;
   margin: .5em;
+}
+
+.close-btn {
+  height: 1.5em;
+  margin: 0 2em 1em 0;
+}
+
+.close-btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-alert {
+  color: red;
+  margin-bottom: 1em;
 }
