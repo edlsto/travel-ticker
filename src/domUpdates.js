@@ -5,43 +5,7 @@ import DataRepo from './DataRepo';
 
 let domUpdates = {
 
-  agencyView() {
-    this.addAgencyHTML()
-    let userData = new DataRepo();
-    userData.getAgency()
-      .then(agency => {
-        this.clickLogoReturnHomeAgency(agency)
-        this.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
-        this.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
-        this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
-        this.approveOrDeny(agency)
-        this.searchForUser(agency)
-      })
-      .catch(error => console.log(error.message))
-  },
 
-  userView(userID) {
-    this.addUserHTML()
-    this.addUserDashboardHTML()
-    let userData = new DataRepo(userID)
-    userData.getUser(userID)
-      .then(user => {
-        this.clickLogoReturnHomeUser(user)
-        this.displayName(user.name)
-        this.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
-        this.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
-        this.displayPast(user.getPastTrips())
-        this.displayCurrent(user.getCurrentTrips())
-        const bookTrip = $('.book-trip')
-        bookTrip.on('click', () => {
-          userData.getDestinations()
-            .then(data => {
-              this.launchBookTripsView(data, user)
-            })
-        })
-      })
-      .catch(error => console.log(error.message))
-  },
 
   calculateDuration(begin, end) {
     const beginDate = moment(begin);
@@ -73,13 +37,36 @@ let domUpdates = {
         user.requestTrip(Date.now(), results[0].id, numTravelers, moment(results[1].selectedDates[0]).format('YYYY/MM/DD'), duration)
           .then(
             response => {
-              this.userView(user.id)
+              this.reloadUserView(user.id)
               this.showAlert()
             }
           )
       }
   })
 },
+
+  reloadUserView(userID) {
+    domUpdates.addUserHTML()
+    this.addUserDashboardHTML()
+    let userData = new DataRepo(userID)
+    userData.getUser(userID)
+      .then(user => {
+        domUpdates.clickLogoReturnHomeUser(user)
+        domUpdates.displayName(user.name)
+        domUpdates.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
+        domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
+        domUpdates.displayPast(user.getPastTrips())
+        domUpdates.displayCurrent(user.getCurrentTrips())
+        const bookTrip = $('.book-trip')
+        bookTrip.on('click', () => {
+          userData.getDestinations()
+            .then(data => {
+              domUpdates.launchBookTripsView(data, user)
+            })
+        })
+      })
+      .catch(error => console.log(error.message))
+  },
 
   validateForm() {
       const userName = $('.user-name')
@@ -98,6 +85,8 @@ let domUpdates = {
   clickLogoReturnHomeAgency(agency) {
     const mainLogo = $('.main-logo');
     mainLogo.on('click', () => {
+      console.log('clicked')
+
       this.returnHomeAgency(agency);
       this.searchForUser(agency);
     })
@@ -121,11 +110,16 @@ let domUpdates = {
     searchResultsCards.on('click', event => {
       let user = agency.users.find(user => user.id === parseInt($(event.target).parent()[0].id.split('-')[2]))
       this.loadUserProfile(user, agency);
-      $('.close-btn').on('click', () => {
-        agency.resetUserAccess();
-        this.returnHomeAgency(agency);
-        this.searchForUser(agency);
-      })
+      this.listenForClose(agency)
+      this.clickLogoReturnHomeAgency(agency)
+    })
+  },
+
+  listenForClose(agency) {
+    $('.close-btn').on('click', () => {
+      agency.resetUserAccess();
+      this.returnHomeAgency(agency);
+      this.searchForUser(agency);
     })
   },
 
@@ -146,7 +140,23 @@ let domUpdates = {
     const deleteBtn = $('.delete-btn')
     deleteBtn.on('click', event => {
       agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
-      $(event.target).parent().parent()[0].remove();
+      .then(
+        res => {
+          let userData = new DataRepo();
+          userData.getAgency()
+            .then(newAgency => {
+              let newUserData = newAgency.users.find(user => {
+                return user.id === agency.id
+              })
+              this.loadUserProfile(newUserData, newAgency)
+              agency = newAgency
+              this.listenForClose(agency)
+              this.clickLogoReturnHomeAgency(agency)
+            })
+            .catch(error => console.log(error.message))
+        }
+      )
+      // $(event.target).parent().parent()[0].remove();
     })
   },
 
@@ -163,6 +173,9 @@ let domUpdates = {
                 return user.id === agency.id
               })
               this.loadUserProfile(newUserData, newAgency)
+              agency = newAgency
+              this.listenForClose(agency)
+              this.clickLogoReturnHomeAgency(agency)
             })
             .catch(error => console.log(error.message))
         }
@@ -196,10 +209,14 @@ let domUpdates = {
   },
 
   returnHomeAgency(agency) {
-    // const main = $('main')
-    this.addAgencyHTML()
+    const main = $('main')
+    const search = $('.search')
+    main.html('<div class="requests"></div>')
+    search.val('')
+    // this.addAgencyHTML()
     this.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
     this.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
+    console.log(agency)
     this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
     this.approveOrDeny(agency);
   },
