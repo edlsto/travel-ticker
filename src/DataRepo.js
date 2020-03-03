@@ -3,7 +3,6 @@ import User from './User'
 import Trip from './Trip'
 var moment = require('moment');
 
-
 class DataRepo {
 
   constructor(id) {
@@ -15,19 +14,12 @@ class DataRepo {
       .then(data => data.json());
   }
 
-  getDestinationsAndTrips() {
-    return Promise.all([this.allTrips, this.allDestinations])
+  getDestinations() {
+    return Promise.all([this.allDestinations])
       .then(promises => {
         return {
-          newTripID: this.getNewTripId(promises[0].trips),
-          allDestinations: promises[1].destinations
-        }
+          allDestinations: promises[0].destinations,        }
       })
-  }
-
-  getNewTripId(trips) {
-
-    return trips.sort((a, b) => b.id - a.id)[0].id + 1;
   }
 
   getUser(userID) {
@@ -47,25 +39,6 @@ class DataRepo {
       })
   }
 
-
-
-
-
-  // getAllTripsForUser(userID) {
-  //   return Promise.all([this.allTrips, this.allDestinations])
-  //     .then( data => {
-  //       console.log(data[1])
-  //       let trips = data[0];
-  //       let destinations = data[1];
-  //       console.log(destinations)
-  //       const filteredData = trips.trips.filter(trip => trip.userID === userID)
-  //       return filteredData.map(trip => {
-  //         return new Trip(trip, destinations)
-  //      })
-  //     })
-  // }
-
-
   getAllTrips(userID, trips, destinations, users) {
     const regex = /\//gi;
     const filteredData = trips.trips.filter(trip => trip.userID === userID)
@@ -73,8 +46,6 @@ class DataRepo {
       return new Trip(trip, destinations, users)
    })
   }
-
-
 
 }
 

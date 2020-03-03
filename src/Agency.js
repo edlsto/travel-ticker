@@ -7,13 +7,6 @@ class Agency extends User {
     this.users = users
   }
 
-  incomeGenerated(trips) {
-    return trips.reduce((totalFees, trip) => {
-      totalFees += trip.cost * .1
-      return totalFees;
-    }, 0)
-  }
-
   accessUserInfo(user) {
     this.id = user.id;
     this.name = user.name;
@@ -35,8 +28,17 @@ class Agency extends User {
     })
   }
 
+  getRevenueFromAllNonPendingTripsThisYear(trips) {
+    let tripsThisYear = trips.filter(trip => {
+      return trip.status !== "pending" && moment(trip.date).isSame('2020-12-31', 'year')
+    });
+    return tripsThisYear.reduce((totalFees, trip) => {
+      totalFees += trip.cost * .1
+      return totalFees;
+    }, 0)
+  }
+
   approveTrip(id) {
-    console.log('post' + id)
     return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip', {
       method: 'POST',
       headers: {
@@ -52,7 +54,6 @@ class Agency extends User {
   }
 
   denyTrip(id) {
-    console.log('delete' + id)
     fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
       method: 'DELETE',
       headers: {
@@ -65,22 +66,6 @@ class Agency extends User {
       .then(json => console.log(json))
       .catch(error => console.log(error.message))
   }
-
-  // deleteTrip(tripID) {
-  //   fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
-  //     method: 'DELETE',
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       "id": tripID
-  //     })
-  //   }).then(response => response.json())
-  //     .then(json => console.log(json))
-  //     .catch(error => console.log(error.message))
-  // }
-
-
 
 }
 

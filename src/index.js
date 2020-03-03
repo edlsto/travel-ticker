@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import './css/base.scss';
-import DataRepo from './FilterData';
+import DataRepo from './DataRepo';
 import domUpdates from './domUpdates'
 import './images/book.png'
 import './images/plus.png'
@@ -25,17 +25,17 @@ logInBtn.on('click', () => {
 })
 
 // agencyView()
-userView(randomUser)
+// userView()
 
-// userView(23)
+// userView(randomUser)
 
 function agencyView() {
   domUpdates.addAgencyHTML()
   let userData = new DataRepo();
   userData.getAgency()
     .then(agency => {
-      console.log(agency.getAllTrips())
-      domUpdates.showEarned(agency.incomeGenerated(agency.getAllTrips()))
+      console.log()
+      domUpdates.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
       domUpdates.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
       domUpdates.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
       domUpdates.approveOrDeny(agency)
@@ -50,13 +50,13 @@ function userView(userID) {
 
   const bookTrip = $('.book-trip')
   let userData = new DataRepo(userID)
+  console.log(userData.getUser(3))
   userData.getUser(userID)
     .then(user => {
 
       const mainLogo = $('.main-logo');
 
       mainLogo.on('click', () => {
-        console.log('big logo')
         domUpdates.returnHomeUser(user);
       })
       domUpdates.displayName(user.name)
@@ -65,7 +65,7 @@ function userView(userID) {
       domUpdates.displayPast(user.getPastTrips())
       domUpdates.displayCurrent(user.getCurrentTrips())
       bookTrip.on('click', () => {
-        userData.getDestinationsAndTrips()
+        userData.getDestinations()
           .then(data => {
             bookTrips(data, user)
           })
@@ -101,15 +101,12 @@ function searchByName(agency) {
 
 function loadUserProfile(user, agency) {
   agency.accessUserInfo(user)
-  console.log(agency)
-  console.log(user)
   domUpdates.setUpUserProfile(agency)
   const pendingUpcomingTrips = agency.getUpcomingTrips().concat(agency.getPendingTrips())
   pendingUpcomingTrips.sort((a, b) => {
     return moment(a.date) - moment(b.date)
   })
   domUpdates.showUserProfileTrips(pendingUpcomingTrips)
-  console.log(pendingUpcomingTrips)
   const deleteBtn = $('.delete-btn')
   const approveBtn = $('.approve-btn')
   deleteBtn.on('click', event => {
@@ -117,16 +114,12 @@ function loadUserProfile(user, agency) {
     $(event.target).parent().parent()[0].remove();
   })
   approveBtn.on('click', event => {
-    console.log('hasdkljfdsa')
     agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
     .then(
       res => {
-        console.log(agency)
         let userData = new DataRepo();
         userData.getAgency()
           .then(newAgency => {
-            console.log(newAgency)
-            console.log(agency)
             let newUserData = newAgency.users.find(user => {
               return user.id === agency.id
             })
@@ -139,20 +132,16 @@ function loadUserProfile(user, agency) {
   })
 }
 
-function reloadUserProfile(user) {
-
-}
-
 function bookTrips(data, user) {
   const parentContainer = $('main')
   let results;
+  console.log(data)
   domUpdates.bookTrip(data.allDestinations)
   const tiles = $('.destination-tile');
   tiles.on('click', (event) => {
     results = getDetailsFromDOM(event, data)
   })
   parentContainer.on('click', (event) => {
-    console.log(user)
     if ($(event.target).hasClass('submit-request')) {
       let numTravelers = parseInt($('.num-travelers-input').val())
       let duration = calculateDuration(results[1].selectedDates[0], results[1].selectedDates[1])
@@ -160,13 +149,9 @@ function bookTrips(data, user) {
         .then(
           response => {
             userView(user.id)
-            const current = $('.current')
-            current.addClass('alert')
-            current.text('Trip successfully requested! We will review your trip request.')
+            domUpdates.showAlert()
           }
         )
-
-
     }
 })
 }
