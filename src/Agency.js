@@ -13,6 +13,12 @@ class Agency extends User {
     this.trips = user.trips;
   }
 
+  resetUserAccess() {
+    this.id = undefined;
+    this.name = undefined;
+    this.trips = undefined;
+  }
+
   getAllTrips() {
     return this.users.reduce((tripsList, user) => {
       user.trips.forEach(trip => {
