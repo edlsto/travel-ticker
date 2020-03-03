@@ -13,7 +13,7 @@ import DataRepo from '../src/DataRepo'
 
 describe('Agency tests', function() {
   it('should have default properties', function() {
-    let tripsInstantiated = trips.map(trip => {
+    let tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
     let agency = new Agency(travelers.travelers.map(user => {
@@ -124,7 +124,7 @@ describe('Agency tests', function() {
   });
   //
   it('should have default properties', function() {
-    let tripsInstantiated = trips.map(trip => {
+    let tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
     let agency = new Agency(travelers.travelers.map(user => {
@@ -233,7 +233,7 @@ describe('Agency tests', function() {
   });
 
   it('should get all trips', function() {
-    let tripsInstantiated = trips.map(trip => {
+    let tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
     let agency = new Agency(travelers.travelers.map(user => {
@@ -337,7 +337,7 @@ describe('Agency tests', function() {
   });
 
   it('should get all pending trips', function() {
-    let tripsInstantiated = trips.map(trip => {
+    let tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
     let agency = new Agency(travelers.travelers.map(user => {
@@ -387,7 +387,7 @@ describe('Agency tests', function() {
   });
 
   it('should get revenue from all non-pending trips', function() {
-    let tripsInstantiated = trips.map(trip => {
+    let tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
     let agency = new Agency(travelers.travelers.map(user => {
