@@ -15,10 +15,10 @@ class DataRepo {
   }
 
   getDestinations() {
-    return Promise.all([this.allDestinations])
-      .then(promises => {
+    return this.allDestinations
+      .then(data => {
         return {
-          allDestinations: promises[0].destinations,        }
+          allDestinations: data.destinations,        }
       })
   }
 
