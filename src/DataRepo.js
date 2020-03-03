@@ -22,10 +22,6 @@ class DataRepo {
       })
   }
 
-  getNewTripId(trips) {
-    return trips.sort((a, b) => b.id - a.id)[0].id + 1;
-  }
-
   getUser(userID) {
     return Promise.all([this.user, this.allTrips, this.allDestinations])
       .then(promises => {
