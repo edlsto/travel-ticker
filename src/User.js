@@ -65,8 +65,6 @@ class User {
       .catch(error => alert(error.message))
   }
 
-
-
 }
 
 
