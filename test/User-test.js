@@ -1,6 +1,9 @@
 import chai from 'chai';
 const expect = chai.expect;
 
+const spies = require('chai-spies');
+chai.use(spies);
+
 import trips from './trip-data-sample'
 import travelers from './user-data-sample'
 import destinations from './destinations-data-sample'
@@ -9,10 +12,25 @@ import User from '../src/User'
 import Trip from '../src/Trip'
 // import Agency from '../src/Agency'
 
+let user;
 
 describe('User tests', function() {
+
+  beforeEach(() => {
+
+    user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)));
+
+  });
+
+  afterEach(() => {
+      chai.spy.restore()
+      chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
+
+    })
+
   it('should hold ID, name and trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips)
+    user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips)
+
     expect(user.id).to.equal(1);
     expect(user.name).to.equal('Ham Leadbeater');
     expect(user.trips).to.deep.equal(
@@ -73,13 +91,11 @@ describe('User tests', function() {
   });
 
   it('should calculate cost of trips this year', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getCostOfTripsThisYear()
     expect(user.getCostOfTripsThisYear()).to.equal(18106);
   });
 
   it('should be able to get future trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getUpcomingTrips()
     expect(user.getUpcomingTrips()).to.deep.equal(
       [
@@ -106,7 +122,6 @@ describe('User tests', function() {
   });
 
   it('should be able to get past trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     user.getPastTrips()
     expect(user.getPastTrips()).to.deep.equal(
       [
@@ -133,7 +148,6 @@ describe('User tests', function() {
   });
 
   it('should be able to get pending trips', function() {
-    let user = new User(travelers.travelers[0].id, travelers.travelers[0].name, trips.trips.map(trip => new Trip(trip, destinations, travelers)))
     expect(user.getPendingTrips()).to.deep.equal(
       [
          {
@@ -175,5 +189,19 @@ describe('User tests', function() {
       ]
     );
   });
+
+  console.log(global.fetch)
+  // chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
+
+    it('should be able to make POST request to request trip', function() {
+
+
+      user.requestTrip(Date.now(), 1, 1, '2020/03/31', 3);
+      expect(global.fetch).to.have.been.called(1);
+      expect(global.fetch).to.have.been.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+
+    })
+
+
 
 });
