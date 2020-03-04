@@ -10,7 +10,7 @@ import destinations from './destinations-data-sample'
 
 import DataRepo from '../src/DataRepo'
 
-chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
+chai.spy.on(global, 'fetch', () => new Promise(() => {}))
 
 
 describe('Data Repo tests', function() {
