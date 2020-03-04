@@ -10,9 +10,6 @@ import destinations from './destinations-data-sample'
 
 import DataRepo from '../src/DataRepo'
 
-
-// global.fetch = () => new Promise((resolve, reject) => {})
-// global.window = {};
 chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
 
 
