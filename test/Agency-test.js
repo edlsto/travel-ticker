@@ -26,7 +26,7 @@ describe('Agency tests', () => {
 
   afterEach(() => {
       chai.spy.restore()
-      chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
+      chai.spy.on(global, 'fetch', () => new Promise(() => {}))
 
     });
 
