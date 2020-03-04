@@ -11,7 +11,8 @@ class DataRepo {
     this.allDestinations = fetch("https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/destinations/destinations")
       .then(data => data.json());
     this.user = fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${id || ''}`)
-      .then(data => data.json());
+      .then(data => data.json())
+      .catch(error => alert(error.message));
   }
 
   getDestinations() {
@@ -20,6 +21,7 @@ class DataRepo {
         return {
           allDestinations: data.destinations,        }
       })
+      .catch(error => alert(error.message))
   }
 
   getUser(userID) {
@@ -27,6 +29,7 @@ class DataRepo {
       .then(promises => {
         return new User(promises[0].id, promises[0].name, this.getAllTrips(promises[0].id, promises[1], promises[2], promises[0]))
       })
+      .catch(error => alert(error.message))
   }
 
   getAgency() {
@@ -37,6 +40,7 @@ class DataRepo {
           return new User(user.id, user.name, this.getAllTrips(user.id, promises[1], promises[2], promises[0]))
         }))
       })
+      .catch(error => alert(error.message))
   }
 
   getAllTrips(userID, trips, destinations, users) {
