@@ -20,7 +20,7 @@ Technologies used:
 
 # Screenshots of my app
 
-Screenshots:  
+**Screenshots:**
 Log-in screen
 ![image](https://user-images.githubusercontent.com/4350550/75848729-38f5ba00-5da0-11ea-8295-74bfc30aebed.png)
 
