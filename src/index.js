@@ -18,10 +18,10 @@ logInBtn.on('click', () => {
   }
 })
 
-// let randomUser = Math.ceil(Math.random() * 50)
+let randomUser = Math.ceil(Math.random() * 50)
 // console.log(randomUser)
 // agencyView()
-// userView(randomUser)
+userView(30)
 
 function agencyView() {
   domUpdates.addAgencyHTML()
