@@ -24,7 +24,7 @@ class DataRepo {
       .catch(error => alert(error.message))
   }
 
-  getUser(userID) {
+  getUser() {
     return Promise.all([this.user, this.allTrips, this.allDestinations])
       .then(promises => {
         return new User(promises[0].id, promises[0].name, this.getAllTrips(promises[0].id, promises[1], promises[2], promises[0]))
