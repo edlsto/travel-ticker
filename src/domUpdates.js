@@ -39,7 +39,7 @@ let domUpdates = {
     domUpdates.addUserHTML()
     this.addUserDashboardHTML()
     let userData = new DataRepo(userID)
-    userData.getUser(userID)
+    userData.getUser()
       .then(user => {
         domUpdates.clickLogoReturnHomeUser(user)
         domUpdates.displayName(user.name)
@@ -66,7 +66,7 @@ let domUpdates = {
       if (regex.test(userName.val()) && password.val() === 'travel2020') {
         const userID = parseInt(userName.val().replace( /^\D+/g, ''))
         return userID;
-      } else if (userName.val() ==='agency' && password.val() === 'travel2020') {
+      } else if (userName.val() === 'agency' && password.val() === 'travel2020') {
         return 0;
       } else {
         $('.login-alert').html('<i class="fa fa-exclamation-triangle"></i> Incorrect user name and/or password')
@@ -114,7 +114,6 @@ let domUpdates = {
 
   searchForUser(agency) {
     const search = $('.search');
-    const requests = $('.requests')
     search.on('keyup', () => {
       if (search.val() === '') {
         this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
