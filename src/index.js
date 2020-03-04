@@ -8,18 +8,20 @@ import './images/search.png'
 import './images/close.png'
 import DataRepo from './DataRepo';
 
-// const logInBtn = $('.log-in')
-// logInBtn.on('click', () => {
-//   let formResult = domUpdates.validateForm();
-//   if (formResult > 0) {
-//     userView(formResult)
-//   } else if (formResult === 0) {
-//     agencyView()
-//   }
-// })
+const logInBtn = $('.log-in')
+logInBtn.on('click', () => {
+  let formResult = domUpdates.validateForm();
+  if (formResult > 0) {
+    userView(formResult)
+  } else if (formResult === 0) {
+    agencyView()
+  }
+})
 
-agencyView()
-// userView(39)
+// let randomUser = Math.ceil(Math.random() * 50)
+// console.log(randomUser)
+// agencyView()
+// userView(randomUser)
 
 function agencyView() {
   domUpdates.addAgencyHTML()
