@@ -35,7 +35,6 @@ class DataRepo {
   getAgency() {
     return Promise.all([this.user, this.allTrips, this.allDestinations])
       .then(promises => {
-        console.log(promises[0])
         return new Agency(promises[0].travelers.map(user => {
           return new User(user.id, user.name, this.getAllTrips(user.id, promises[1], promises[2], promises[0]))
         }))
