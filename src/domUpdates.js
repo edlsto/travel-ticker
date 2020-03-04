@@ -76,8 +76,6 @@ let domUpdates = {
   clickLogoReturnHomeAgency(agency) {
     const mainLogo = $('.main-logo');
     mainLogo.on('click', () => {
-      console.log('clicked')
-
       this.returnHomeAgency(agency);
       this.searchForUser(agency);
     })
@@ -132,7 +130,6 @@ let domUpdates = {
   listenForDenyTrip(agency) {
     const deleteBtn = $('.delete-btn')
     deleteBtn.on('click', event => {
-      console.log($(event.target).parent().parent()[0])
       agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
       .then(
         res => {
@@ -180,8 +177,6 @@ let domUpdates = {
 
   showAlert() {
     const pendingUpcoming = $('.pending-upcoming')
-    console.log(pendingUpcoming)
-    console.log('here')
     pendingUpcoming.prepend('<div class="alert">Trip successfully requested! We will review your trip request.</div>')
   },
 
@@ -208,10 +203,8 @@ let domUpdates = {
     const search = $('.search')
     main.html('<div class="requests"></div>')
     search.val('')
-    // this.addAgencyHTML()
     this.showEarned(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips()))
     this.displayCurrentTravelers(agency.getCurrentTrips(agency.getAllTrips()).length)
-    console.log(agency)
     this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
     this.approveOrDeny(agency);
   },
@@ -247,12 +240,9 @@ let domUpdates = {
   },
 
   setUpUserProfile(agency) {
-    console.log(agency.getCostOfTripsThisYear())
     const search = $('.search')
     search.on('keyup', () => {
-      console.log(search.val())
       if (search.val() === '') {
-        console.log('hi')
         agency.resetUserAccess();
         this.returnHomeAgency(agency);
         this.searchForUser(agency);
@@ -275,8 +265,6 @@ let domUpdates = {
 
   showUserProfileTrips(trips) {
     const wrapper = $('.user-profile-wrapper');
-    console.log('here')
-    console.log(trips)
     wrapper.html('')
     trips.forEach(trip => {
       wrapper.append(`
@@ -510,7 +498,6 @@ let domUpdates = {
     const duration = endDate.diff(beginDate, 'days')
     const totalCostPerTraveler = (duration * destination.estimatedLodgingCostPerDay + destination.estimatedFlightCostPerPerson) * 1.1;
     const totalCost = totalCostPerTraveler * travelers;
-    console.log(totalCost)
     $('#cost-estimate').text(`$${this.numberWithCommas(Math.round(totalCost))}`)
   },
 
