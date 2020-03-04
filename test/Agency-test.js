@@ -10,15 +10,29 @@ import User from '../src/User'
 import Trip from '../src/Trip'
 import DataRepo from '../src/DataRepo'
 
+let tripsInstantiated
+let agency
 
-describe('Agency tests', function() {
-  it('should have default properties', function() {
-    let tripsInstantiated = trips.trips.map(trip => {
+describe('Agency tests', () => {
+
+  beforeEach(() => {
+     tripsInstantiated = trips.trips.map(trip => {
       return new Trip(trip, destinations, travelers)
     })
-    let agency = new Agency(travelers.travelers.map(user => {
+     agency = new Agency(travelers.travelers.map(user => {
       return new User(user.id, user.name, tripsInstantiated)
     }))
+  });
+
+  afterEach(() => {
+      chai.spy.restore()
+      chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
+
+    });
+
+
+  it('should have default properties', function() {
+
     expect(agency.users).to.deep.equal(
       [{
         id: 1,
@@ -124,12 +138,7 @@ describe('Agency tests', function() {
   });
   //
   it('should have default properties', function() {
-    let tripsInstantiated = trips.trips.map(trip => {
-      return new Trip(trip, destinations, travelers)
-    })
-    let agency = new Agency(travelers.travelers.map(user => {
-      return new User(user.id, user.name, tripsInstantiated)
-    }))
+
     agency.accessUserInfo(
       agency.users[0]
     )
@@ -233,12 +242,7 @@ describe('Agency tests', function() {
   });
 
   it('should get all trips', function() {
-    let tripsInstantiated = trips.trips.map(trip => {
-      return new Trip(trip, destinations, travelers)
-    })
-    let agency = new Agency(travelers.travelers.map(user => {
-      return new User(user.id, user.name, tripsInstantiated)
-    }))
+
     expect(agency.getAllTrips()).to.deep.equal(
       [
    {
@@ -337,12 +341,7 @@ describe('Agency tests', function() {
   });
 
   it('should get all pending trips', function() {
-    let tripsInstantiated = trips.trips.map(trip => {
-      return new Trip(trip, destinations, travelers)
-    })
-    let agency = new Agency(travelers.travelers.map(user => {
-      return new User(user.id, user.name, tripsInstantiated)
-    }))
+
     expect(agency.getAllPendingTrips(agency.getAllTrips())).to.deep.equal(
       [
    {
@@ -387,14 +386,25 @@ describe('Agency tests', function() {
   });
 
   it('should get revenue from all non-pending trips', function() {
-    let tripsInstantiated = trips.trips.map(trip => {
-      return new Trip(trip, destinations, travelers)
-    })
-    let agency = new Agency(travelers.travelers.map(user => {
-      return new User(user.id, user.name, tripsInstantiated)
-    }))
+
     expect(agency.getRevenueFromAllNonPendingTripsThisYear(agency.getAllTrips())).to.equal(359)
 
   });
+
+  it('should be able to approve a trip', function() {
+
+    agency.approveTrip(2);
+    expect(global.fetch).to.have.been.called(1);
+    expect(global.fetch).to.have.been.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip');
+
+  })
+
+  it('should be able to deny a trip', function() {
+
+    agency.denyTrip(2);
+    expect(global.fetch).to.have.been.called(1);
+    expect(global.fetch).to.have.been.called.with('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips');
+
+  })
 
 });
