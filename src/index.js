@@ -10,18 +10,37 @@ import DataRepo from './DataRepo';
 
 const logInBtn = $('.log-in')
 logInBtn.on('click', () => {
+  startUp()
+})
+
+function startUp() {
   let formResult = domUpdates.validateForm();
   if (formResult > 0) {
     userView(formResult)
   } else if (formResult === 0) {
     agencyView()
   }
+}
+
+const input = $('input')
+
+input.on('keyup', () => {
+  if(event.which == 13) {
+    startUp()
+}
+  // let formResult = domUpdates.validateForm();
+  // if (formResult > 0) {
+  //   userView(formResult)
+  // } else if (formResult === 0) {
+  //   agencyView()
+  // }
+
 })
 
 let randomUser = Math.ceil(Math.random() * 50)
 // console.log(randomUser)
 // agencyView()
-userView(30)
+// userView(30)
 
 function agencyView() {
   domUpdates.addAgencyHTML()
