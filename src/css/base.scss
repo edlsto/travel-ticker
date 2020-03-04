@@ -5,8 +5,6 @@
 /* LAYOUT SECTIONS */
 
 .dashboard {
-  font-family: 'Hind Madurai';
-  background: white;
   display: grid;
   grid-template-rows: 70px 1fr;
   grid-template-columns: 200px 1fr;
@@ -14,43 +12,44 @@
     'header header'
     'sidebar main';
   @include full-size();
+  font-family: 'Hind Madurai';
+  background: white;
   color: $dark-gray;
   text-align: center;
 }
 
 header {
-  background-color: #1CA3BA;
-  grid-area: header;
   display: flex;
-  justify-content: space-between;;
+  grid-area: header;
+  background-color: #1CA3BA;
+  justify-content: space-between;
 }
 
 aside {
-  background-color: #CDFFF8;
   grid-area: sidebar;
+  background-color: #CDFFF8;
 }
 
 main {
-  background-color: $light-gray;
-  grid-area: main;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 2fr 1fr;
   grid-template-areas:
     'current current'
     'pending-upcoming past';
-  overflow-y:auto;
-
+  grid-area: main;
+  overflow-y: auto;
+  background-color: $light-gray;
 }
 
 .alert {
   grid-area: alert;
-  text-align: center;
   background: $approve;
   padding: .5em;
+  margin: .5em;
   font-size: 1.5em;
   color: white;
-  margin: .5em;
+  text-align: center;
 }
 
 .current {
@@ -71,18 +70,19 @@ body, html {
 }
 
 h1 {
+  margin: 1.5em 0 .2em 0;
   font-family: 'Cabin Condensed';
   text-shadow: 0px 0px 3px black;
   font-size: 5em;
-  margin: 1.5em 0 .2em 0;
+
 }
 
 h2 {
-  font-family: 'Cabin Condensed';
-  color: white;
-  margin: 0;
-  font-size: 3em;
   margin: .1em 0 0 .3em;
+  margin: 0;
+  color: white;
+  font-family: 'Cabin Condensed';
+  font-size: 3em;
   cursor: pointer;
 }
 
@@ -91,26 +91,25 @@ h3 {
 }
 
 form {
+  min-width: 15em;
   width: 25%;
   margin: 0 auto;
+  padding: 1em;
   text-align: center;
   background-color: white;
-  padding: 1em;
   background: rgba(255, 255, 255, 0.5);
-  min-width: 15em;
 }
 
 input {
   display: block;
   width: 100%;
-  border: .2px solid black;
   height: 2em;
-  font-size: 1.2em;
+  border: .2px solid black;
   box-sizing: border-box;
   padding-left: .4em;
-  background: rgba(255, 255, 255, 1);
   margin-bottom: 1em;
-
+  background: rgba(255, 255, 255, 1);
+  font-size: 1.2em;
 }
 
 button {
@@ -126,23 +125,23 @@ button {
 header h3 {
   border: 1px solid white ;
   padding: 1em;
-  @include rounded-corners(.2em)
-  line-height: 0;
   margin-top: .8em;
+  @include rounded-corners(.2em)
   color: white;
+  line-height: 0;
 }
 
 .display-cost {
-  font-size: 2.5em;
   display: block;
-  line-height: .9
+  font-size: 2.5em;
+  line-height: .9;
 }
 
 .trip-card {
-  background: white;
+  display: flex;
   margin: 1em 20px 1em 18px;
   padding: 1em;
-  display: flex;
+  background: white;
   text-align: left;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
@@ -155,29 +154,31 @@ header h3 {
 /* LOGIN SCREEN */
 
 .log-in-screen {
-  font-family: 'Hind Madurai', ;
-  text-align: center;
+  height: 100%;
+  overflow: hidden;
   color: white;
   background: url(../images/bg.jpg) no-repeat center center fixed;
   background-size: cover;
-  height: 100%;
-  overflow: hidden;
+  text-align: center;
+  font-family: 'Hind Madurai';
 }
 
 .login-alert {
-  color: red;
   margin-bottom: 1em;
+  color: red;
 }
 
-
+.log-in {
+  cursor: pointer;
+}
 
 /* AGENCY DASHBOARD */
 
 .dashboard-agency main {
-  background-color: $light-gray;
-  grid-area: main;
-  justify-content: center;
   display: block;
+  justify-content: center;
+  grid-area: main;
+  background-color: $light-gray;
 }
 
 /* TRAVELER DASHBOARD */
@@ -194,8 +195,6 @@ header h3 {
   padding: 0 1em;
 }
 
-
-
 .pending-upcoming {
   grid-area: pending-upcoming;
 }
@@ -206,7 +205,6 @@ header h3 {
 
 .spent-container {
   margin-top: 2em;
-
 }
 
 .book-icon {
@@ -214,10 +212,10 @@ header h3 {
 }
 
 .book-trip {
-  background: white;
   width: 75%;
   margin: 1em auto 0 auto;
   padding: 1em;
+  background: white;
   cursor: pointer;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
 }
@@ -229,21 +227,21 @@ header h3 {
 .card-img {
   width: 20%;
   height: 5em;
-  margin-right: 1em;
   object-fit: cover;
+  margin-right: 1em;
 }
 
 .past .card-img {
   width: 40%;
   height: 5em;
-  margin-right: 1em;
   object-fit: cover;
+  margin-right: 1em;
 }
 
 .upcoming-wrapper {
-  border-right: 1px solid gray;
-  padding-top: 1em;
   height: 100%;
+  padding-top: 1em;
+  border-right: 1px solid gray;
 }
 
 .past-wrapper {
@@ -278,8 +276,8 @@ header h3 {
 
 .destination-tile {
   flex: 1 1 11.5em;
-  height: 10em;
   position: relative;
+  height: 10em;
   margin: 0;
   padding: .2em;
   cursor: pointer;
@@ -295,16 +293,16 @@ header h3 {
 
 .destination-name {
   top: .4em;
-  color: white;
-  font-size: 1.3em;
-  text-shadow: .2px .4px 1.8px rgba(0,0,0,0.6);;
-  padding: .2em;
-  background-color: #525252;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
   display: inline;
   position: relative;
   z-index: 1;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: .2em;
+  color: white;
+  background-color: #525252;
+  font-size: 1.3em;
+  text-shadow: .2px .4px 1.8px rgba(0,0,0,0.6);;
 }
 
 .book-trip-view h3 {
@@ -322,19 +320,19 @@ header h3 {
 }
 
 .select-trip-details input {
-  width: 2.5em;
-  text-align: center;
   flex: 0 0 0;
+  width: 2.5em;
   margin-top: 1em;
   padding: 0;
+  text-align: center;
 }
 
 .plus-minus-img {
   width: 2.5em;
   height: 2.5em;
-  margin: 0 auto;
+  margin: 1em auto;
   text-align: center;
-  margin: 1em;
+  cursor: pointer;
 }
 
 .select-trip-details input[type=number]::-webkit-inner-spin-button,
@@ -345,16 +343,16 @@ header h3 {
 
 .number-travelers-wrapper {
   display: flex;
-  justify-content: center;
   flex: 0 0 100%;
+  justify-content: center;
 }
 
 .options-wrapper {
-  text-align: center;
   display: flex;
+  flex: 0 0 50%;
   justify-content: center;
   flex-wrap: wrap;
-  flex: 0 0 50%;
+  text-align: center;
 }
 
 .calculate-cost {
@@ -377,11 +375,12 @@ header h3 {
 .submit-request {
   width: 15em;
   height: 3em;
-  background: #57DE92;
   border: 0;
   @include rounded-corners(.5em)
-  text-transform: uppercase;
   color: white;
+  background: #57DE92;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 
 .flatpickr-calendar {
@@ -389,14 +388,14 @@ header h3 {
 }
 
 .status {
-  align-items: center;
   display: flex;
+  align-items: center;
 }
 
 .status-btn {
-  color: white;
-  @include rounded-corners(1em)
   padding: .3em .6em;
+  @include rounded-corners(1em)
+  color: white;
 }
 
 .approved .status-btn {
@@ -412,8 +411,8 @@ header h3 {
 }
 
 .dashboard-agency .trip-details {
-  flex: 0 1 80%;
   display: flex;
+  flex: 0 1 80%;
 }
 
 .current-trip img {
@@ -426,7 +425,6 @@ header h3 {
 
 .current-label .status-btn {
   background: #2B77FF;
-
 }
 
 .current-label {
@@ -436,19 +434,16 @@ header h3 {
   margin-left: 1em;
 }
 
-
-
 /* AGENCY STYLES */
 
 .agency-btn {
-  margin: 0 0em;
   flex: 0 0 5%;
+  margin: 0 0em;
+  border: 0;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   color: white;
   text-transform: uppercase;
-  border: 0;
-  box-shadow: none;
   cursor: pointer;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .approve-deny-btns {
@@ -459,8 +454,8 @@ header h3 {
 }
 
 .approve-btn {
-  background: $approve;
   margin-right: 1em;
+  background: $approve;
 }
 
 .deny-btn {
@@ -472,15 +467,15 @@ header h3 {
 }
 
 .client-details-btn {
-  background: blue;
   flex: 0 auto;
   width: auto;
+  background: blue;
 }
 
 .trip-req {
+  flex: 0 0 25%;
   font-size: $font-trip-search;
   line-height: 1.9;
-  flex: 0 0 25%;
 }
 
 .search-result {
@@ -525,8 +520,8 @@ header h3 {
 
 .user-profile h2 {
   text-align: left;
-  font-size: 2em;
   color: #3C3C3C;
+  font-size: 2em;
   font-family: 'Hind Madurai';
 }
 
@@ -536,8 +531,8 @@ header h3 {
 
 .trip-options {
   display: flex;
-  flex: 0 0 80%;
   justify-content: space-around;
+  flex: 0 0 80%;
   width: 100%;
 }
 
@@ -683,8 +678,8 @@ header h3 {
   }
 
   .trip-details {
-    flex: 0 0 100%;
     flex-direction: column;
+    flex: 0 0 100%;
   }
 
   .user-profile .trip-card {
