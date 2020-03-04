@@ -5,21 +5,11 @@ import DataRepo from './DataRepo';
 
 let domUpdates = {
 
-
-
   calculateDuration(begin, end) {
     const beginDate = moment(begin);
     const endDate = moment(end);
     const duration = endDate.diff(beginDate, 'days')
     return duration
-  },
-
-  getDetailsFromDOM(event, data) {
-    let selectedDestination = this.selectDestination(event, data.allDestinations)
-    this.selectTripDetails(selectedDestination);
-    let fp = this.getDates(selectedDestination)
-    this.getTravelersNumber(selectedDestination, fp)
-    return [selectedDestination, fp]
   },
 
   launchBookTripsView(data, user) {
@@ -283,10 +273,6 @@ let domUpdates = {
 
   },
 
-  // approveDeleteUserProfile(agency, pendingUpcomingTrips) {
-  //
-  // },
-
   showUserProfileTrips(trips) {
     const wrapper = $('.user-profile-wrapper');
     console.log('here')
@@ -313,10 +299,38 @@ let domUpdates = {
     const denyBtn = $('.deny-btn')
     approveBtn.on('click', (event) => {
       agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      .then(
+        res => {
+          let userData = new DataRepo();
+          userData.getAgency()
+            .then(newAgency => {
+              let newUserData = newAgency.users.find(user => {
+                return user.id === agency.id
+              })
+              agency = newAgency
+              this.clickLogoReturnHomeAgency(agency)
+            })
+            .catch(error => console.log(error.message))
+        }
+      )
       $(event.target).parent().parent()[0].remove();
     })
     denyBtn.on('click', event => {
       agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      .then(
+        res => {
+          let userData = new DataRepo();
+          userData.getAgency()
+            .then(newAgency => {
+              let newUserData = newAgency.users.find(user => {
+                return user.id === agency.id
+              })
+              agency = newAgency
+              this.clickLogoReturnHomeAgency(agency)
+            })
+            .catch(error => console.log(error.message))
+        }
+      )
       $(event.target).parent().parent()[0].remove();
     })
   },
@@ -521,6 +535,15 @@ let domUpdates = {
     return agency.users.filter(user => {
       return search.val().toLowerCase() === user.name.slice(0, search.val().length).toLowerCase() || search.val().toLowerCase() === user.name.split(' ')[1].slice(0, search.val().length).toLowerCase()
     })
+  },
+
+
+  getDetailsFromDOM(event, data) {
+    let selectedDestination = this.selectDestination(event, data.allDestinations)
+    this.selectTripDetails(selectedDestination);
+    let fp = this.getDates(selectedDestination)
+    this.getTravelersNumber(selectedDestination, fp)
+    return [selectedDestination, fp]
   }
 
 
