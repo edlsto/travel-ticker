@@ -45,7 +45,6 @@ class User {
   }
 
   requestTrip(tripID, destinationID, travelers, date, duration) {
-    console.log(tripID, destinationID, travelers, date, duration)
     return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
       method: 'POST',
       headers: {
