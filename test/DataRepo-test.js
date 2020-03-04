@@ -48,7 +48,6 @@ describe('Data Repo tests', function() {
 
   it('should be able to get all trips', function() {
     let dataRepo = new DataRepo(1);
-    console.log(dataRepo.getAllTrips(1, trips, destinations, travelers))
     expect(dataRepo.getAllTrips(1, trips, destinations, travelers)).to.deep.equal(
       [
          {
