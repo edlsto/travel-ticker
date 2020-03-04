@@ -190,9 +190,6 @@ describe('User tests', function() {
     );
   });
 
-  console.log(global.fetch)
-  // chai.spy.on(global, 'fetch', () => new Promise((resolve, reject) => {}))
-
     it('should be able to make POST request to request trip', function() {
 
 
