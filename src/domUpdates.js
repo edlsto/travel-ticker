@@ -130,6 +130,8 @@ let domUpdates = {
     search.on('keyup', () => {
       if (search.val() === '') {
         this.agencyDisplayPending(agency.getAllPendingTrips(agency.getAllTrips()))
+        this.approveOrDeny(agency);
+
       } else {
         this.showSearchResults(agency)
       }
@@ -140,6 +142,7 @@ let domUpdates = {
   listenForDenyTrip(agency) {
     const deleteBtn = $('.delete-btn')
     deleteBtn.on('click', event => {
+      console.log($(event.target).parent().parent()[0])
       agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
       .then(
         res => {
@@ -231,7 +234,7 @@ let domUpdates = {
       <aside>
         <div class="spent-container"><span id="spent-this-year" class="display-cost"></span>spent on trips this year</div>
         <div class="book-trip">
-          <img class="book-icon" src="./images/book.png">
+          <img class="book-icon" alt="icon of a book" src="./images/book.png">
           <h3>Book a trip</h3>
         </div>
       </aside>
@@ -255,11 +258,22 @@ let domUpdates = {
 
   setUpUserProfile(agency) {
     console.log(agency.getCostOfTripsThisYear())
+    const search = $('.search')
+    search.on('keyup', () => {
+      console.log(search.val())
+      if (search.val() === '') {
+        console.log('hi')
+        agency.resetUserAccess();
+        this.returnHomeAgency(agency);
+        this.searchForUser(agency);
+
+      }
+    })
     const requests = $('.requests')
     requests.addClass('user-profile')
     requests.removeClass('requests')
     requests.html(`
-      <div class="close-btn-container"><img class="close-btn" src="images/close.png"></div>
+      <div class="close-btn-container"><img class="close-btn" alt="icon for close button" src="images/close.png"></div>
       <div class="user-profile-name-amount-spent"><h2>${agency.name}</h2><h3>Amount spent this year: $${this.numberWithCommas(Math.round(agency.getCostOfTripsThisYear()))}</h3></div>
         <div class="user-profile-wrapper">
 
@@ -298,12 +312,12 @@ let domUpdates = {
     const approveBtn = $('.approve-btn')
     const denyBtn = $('.deny-btn')
     approveBtn.on('click', (event) => {
-      agency.approveTrip(parseInt($(event.target).parent()[0].id.split('-')[2]))
-      $(event.target).parent()[0].remove();
+      agency.approveTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      $(event.target).parent().parent()[0].remove();
     })
     denyBtn.on('click', event => {
-      agency.denyTrip(parseInt($(event.target).parent()[0].id.split('-')[2]))
-      $(event.target).parent()[0].remove();
+      agency.denyTrip(parseInt($(event.target).parent().parent()[0].id.split('-')[2]))
+      $(event.target).parent().parent()[0].remove();
     })
   },
 
@@ -313,7 +327,7 @@ let domUpdates = {
     body.html(`
       <header>
         <h2 class="main-logo">Travel Tracker</h2>
-          <div class="search-user-name-wrapper"><img class="search-img" src="./images/search.png"><input type="text" class="search" placeholder="Search for clients ">
+          <div class="search-user-name-wrapper"><img class="search-img" alt="icon for search bar" src="./images/search.png"><input type="text" class="search" placeholder="Search for clients ">
         </div>
 
       </header>
@@ -360,7 +374,7 @@ let domUpdates = {
     trips.sort((a, b) => b.status - a.status ? 1 : -1)
     const pendingUpcoming = $('.pending-upcoming')
     trips.forEach(trip => {
-      pendingUpcoming.prepend(`<div class="trip-card ${trip.status}"><img class="card-img" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><div class="status"><p class="status-btn">${this.uppercase(trip.status)}</p></div></div>`)
+      pendingUpcoming.prepend(`<div class="trip-card ${trip.status}"><img class="card-img" alt="${trip.destination.alt}" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><div class="status"><p class="status-btn">${this.uppercase(trip.status)}</p></div></div>`)
     })
 
   },
@@ -383,14 +397,14 @@ let domUpdates = {
   displayCurrent(trips) {
     const current = $('.current');
     trips.forEach(trip => {
-      current.prepend(`<div class="trip-card current-trip"><div class="current-label"><p class="status-btn">Current trip</p></div><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><img class="card-img" src=${trip.destination.image}></div>`)
+      current.prepend(`<div class="trip-card current-trip"><div class="current-label"><p class="status-btn">Current trip</p></div><div class="trip-details"><h3>${trip.destination.destination}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p><p>Travelers: ${trip.travelers}</div><img class="card-img" alt="${trip.destination.alt}" src=${trip.destination.image}></div>`)
     })
   },
 
   displayPast(trips) {
     const past = $('.past')
     trips.forEach(trip => {
-       past.prepend(`<div class="trip-card"><img class="card-img" src=${trip.destination.image}><div class="trip-details"><h3>${trip.destination.destination.split(', ')[0]}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p></div></div>`)
+       past.prepend(`<div class="trip-card"><img class="card-img" src=${trip.destination.image} alt="${trip.destination.alt}"><div class="trip-details"><h3>${trip.destination.destination.split(', ')[0]}</h3><p> ${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</p></div></div>`)
      })
   },
 
@@ -409,7 +423,7 @@ let domUpdates = {
   createTiles(destinations) {
     const destinationsWrapper = $('.destinations-wrapper');
     destinations.forEach(destination => {
-      destinationsWrapper.append(`<div class="destination-tile" id="${destination.id}"><div class="destination-name-wrapper"><span class="destination-name">${destination.destination}</span></div><img src=${destination.image}></div>`)
+      destinationsWrapper.append(`<div class="destination-tile" id="${destination.id}"><div class="destination-name-wrapper"><span class="destination-name">${destination.destination}</span></div><img src=${destination.image} alt="${destination.alt}"></div>`)
     })
 
   },
@@ -440,7 +454,7 @@ let domUpdates = {
       <div class="lower-wrapper">
       <div class="options-wrapper">
       <h4>Number of travelers</h4>
-      <div class="number-travelers-wrapper"><img class='plus-minus-img minus' src='./images/minus.png'><input type="number" value=2 class="num-travelers-input"><img class='plus-minus-img plus' src='./images/plus.png'></div>
+      <div class="number-travelers-wrapper"><img class='plus-minus-img minus' alt="image of plus" src='./images/minus.png'><input type="number" value=2 class="num-travelers-input"><img class='plus-minus-img plus' alt="image of minus" src='./images/plus.png'></div>
       <button class="submit-request">Submit request</button>
       </div>
       <div class="calculate-cost">
