@@ -38,7 +38,7 @@ let domUpdates = {
           .then(
             response => {
               this.reloadUserView(user.id)
-              this.showAlert()
+
             }
           )
       }
@@ -55,6 +55,7 @@ let domUpdates = {
         domUpdates.displayName(user.name)
         domUpdates.displaySpentThisYear(Math.round(user.getCostOfTripsThisYear()))
         domUpdates.displayPendingUpcoming(user.getPendingTrips().concat(user.getUpcomingTrips()))
+        this.showAlert()
         domUpdates.displayPast(user.getPastTrips())
         domUpdates.displayCurrent(user.getCurrentTrips())
         const bookTrip = $('.book-trip')
@@ -185,9 +186,10 @@ let domUpdates = {
   },
 
   showAlert() {
-    const current = $('.current')
-    current.addClass('alert')
-    current.text('Trip successfully requested! We will review your trip request.')
+    const pendingUpcoming = $('.pending-upcoming')
+    console.log(pendingUpcoming)
+    console.log('here')
+    pendingUpcoming.prepend('<div class="alert">Trip successfully requested! We will review your trip request.</div>')
   },
 
   clickLogoReturnHomeUser(user) {
@@ -225,7 +227,7 @@ let domUpdates = {
     const body = $('body')
     body.removeClass('log-in')
     body.html(`
-      <header><h2 class="main-logo">Travel Tracker</h2><h3 id="user-name"></h3></header>
+      <header><h2 class="main-logo">Travel Tracker</h2><h3 id="user-name-desktop"></h3><h3 id="user-name-mobile"></h3></header>
       <aside>
         <div class="spent-container"><span id="spent-this-year" class="display-cost"></span>spent on trips this year</div>
         <div class="book-trip">
@@ -238,6 +240,7 @@ let domUpdates = {
       </main>
     `);
     body.addClass('dashboard')
+    body.removeClass('log-in-screen')
   },
 
   addUserDashboardHTML() {
@@ -251,12 +254,13 @@ let domUpdates = {
   },
 
   setUpUserProfile(agency) {
+    console.log(agency.getCostOfTripsThisYear())
     const requests = $('.requests')
     requests.addClass('user-profile')
     requests.removeClass('requests')
     requests.html(`
       <div class="close-btn-container"><img class="close-btn" src="images/close.png"></div>
-      <div class="user-profile-name-amount-spent"><h2>${agency.name}</h2><h3>Amount spent this year: $${this.numberWithCommas(agency.getCostOfTripsThisYear())}</h3></div>
+      <div class="user-profile-name-amount-spent"><h2>${agency.name}</h2><h3>Amount spent this year: $${this.numberWithCommas(Math.round(agency.getCostOfTripsThisYear()))}</h3></div>
         <div class="user-profile-wrapper">
 
 
@@ -324,11 +328,14 @@ let domUpdates = {
 
     `);
     body.addClass('dashboard dashboard-agency')
+    body.removeClass('log-in-screen')
   },
 
   displayName(name) {
-    const userName = $('#user-name')
-    userName.text(name)
+    const userNameDesktop = $('#user-name-desktop')
+    userNameDesktop.text(name)
+    const userNameMobile = $('#user-name-mobile')
+    userNameMobile.text(`${name.charAt(0)}${name.split(' ')[1].charAt(0)}`)
   },
 
   displayCurrentTravelers(num) {
@@ -393,7 +400,7 @@ let domUpdates = {
     requests.html('')
     requests.append(trips.length > 0 ? '<h3>Pending trip requests</h3>' : '<h3>No new trip requests</h3>')
     trips.forEach(trip => {
-      requests.append(`<div class="trip-card" id="trip-request-${trip.id}""><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span><button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn deny-btn" type="button">Deny</button></div>`)
+      requests.append(`<div class="trip-card" id="trip-request-${trip.id}""><div class="trip-details"><span class="traveler-name trip-req">${trip.name}</span><span class="destination trip-req">${trip.destination.destination}</span><span class="date trip-req">${moment(trip.date).format('M/D')}-${moment(trip.date).add(trip.duration, 'days').format('M/D/YYYY')}</span><span class="travelers trip-req">${trip.travelers} travelers</span></div><div class="approve-deny-btns"><button class="agency-btn approve-btn" type="button">Approve</button><button class="agency-btn deny-btn" type="button">Deny</button></div></div>`)
     })
 
   },
@@ -483,9 +490,9 @@ let domUpdates = {
     let fp = flatpickr("#date-picker", {
       mode: 'range',
       inline: 'true',
-      showMonths: 3,
-      minDate: 'today',
-      defaultDate: [moment().format('YYYY-MM-DD'), moment().add(7,'days').format('YYYY-MM-DD')],
+      showMonths: window.innerWidth > 1000 ? 2 : 1,
+      minDate: new Date().fp_incr(1),
+      defaultDate: [moment().add(14,'days').format('YYYY-MM-DD'), moment().add(21,'days').format('YYYY-MM-DD')],
       onChange: function(selectedDates, dateStr, instance) {
         if (selectedDates.length === 2) {
           domUpdates.showCost(selectedDestination, selectedDates, $('.num-travelers-input').val())
