@@ -60,7 +60,7 @@ class Agency extends User {
   }
 
   denyTrip(id) {
-    fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
+    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips', {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json"
