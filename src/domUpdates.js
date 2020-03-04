@@ -18,9 +18,10 @@ let domUpdates = {
     this.bookTrip(data.allDestinations)
     const tiles = $('.destination-tile');
     tiles.on('click', (event) => {
-      results = this.getDetailsFromDOM(event, data)
+      results = this.getDetailsFromDOM(data, event)
     })
     parentContainer.on('click', (event) => {
+      console.log(results)
       if ($(event.target).hasClass('submit-request')) {
         let numTravelers = parseInt($('.num-travelers-input').val())
         let duration = this.calculateDuration(results[1].selectedDates[0], results[1].selectedDates[1])
@@ -524,7 +525,7 @@ let domUpdates = {
   },
 
 
-  getDetailsFromDOM(event, data) {
+  getDetailsFromDOM(data, event) {
     let selectedDestination = this.selectDestination(event, data.allDestinations)
     this.selectTripDetails(selectedDestination);
     let fp = this.getDates(selectedDestination)
