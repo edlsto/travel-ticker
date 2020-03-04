@@ -34,12 +34,13 @@ main {
   background-color: #EEEEEE;
   grid-area: main;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 2fr 1fr;
   grid-template-areas:
     'current current'
     'pending-upcoming past';
   overflow-y:auto;
+
 }
 
 .alert {
@@ -242,6 +243,7 @@ header h3 {
 .upcoming-wrapper {
   border-right: 1px solid gray;
   padding-top: 1em;
+  height: 100%;
 }
 
 .past-wrapper {
@@ -400,7 +402,7 @@ header h3 {
 }
 
 .pending .status-btn {
-  background: #C7C100;
+  background: #6A7600;
   color: white;
   border-radius: 1em;
   padding: .3em .6em;
