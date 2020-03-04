@@ -21,7 +21,7 @@ function startUp() {
 const input = $('input')
 
 input.on('keyup', () => {
-  if(event.which == 13) {
+  if (event.which === 13) {
     startUp()
   }
 })
@@ -52,7 +52,7 @@ function userView(userID) {
   domUpdates.addUserHTML()
   domUpdates.addUserDashboardHTML()
   let userData = new DataRepo(userID)
-  userData.getUser(userID)
+  userData.getUser()
     .then(user => {
       domUpdates.clickLogoReturnHomeUser(user)
       domUpdates.displayName(user.name)
